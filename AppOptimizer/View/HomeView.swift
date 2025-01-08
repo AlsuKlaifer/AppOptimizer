@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
+import AppKit
 
 struct HomeView: View {
     @State private var appPath: String = ""
     @State private var outputFile: String = ""
-
+    @State private var retainPublic: Bool = false // все публичные и открытые объявления помечаем используемыми
+    @State private var includeAssets: Bool = false // добавить анализ неиспользуемых ассетов
+    @State private var includeLibraries: Bool = false // добавить анализ неиспользуемых библиотек
+    
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -20,12 +24,20 @@ struct HomeView: View {
                 .padding()
             VStack {
                 HStack {
-                    Text("Enter the project path")
+                    Text("Project path:")
                     TextField("Path", text: $appPath)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 400)
                         .padding([.top, .bottom])
+                    Button("Choose...") {
+                        selectProjectPath()
+                    }
                 }
+            }
+            VStack {
+                Toggle("Retain Public API", isOn: $retainPublic)
+                Toggle("Include Assets", isOn: $includeAssets)
+                Toggle("Include Libs", isOn: $includeLibraries)
             }
             HStack {
                 Button("Search unused code") {
@@ -33,7 +45,7 @@ struct HomeView: View {
                 }
                 .padding()
                 Button("Search duplicates") {
-                    
+                    runDuplicateCodeAnalysis()
                 }
             }
             if !outputFile.isEmpty {
@@ -54,36 +66,69 @@ struct HomeView: View {
     }
 
     private func runDeadCodeAnalysis() {
+        let deadCodeManager = DeadCodeManager(
+            appPath: appPath,
+            retainPublic: retainPublic,
+            includeAssets: includeAssets,
+            includeLibraries: includeLibraries
+        )
+        deadCodeManager.analyzeDeadCode(outputFile: &outputFile)
+    }
+    
+    /// Открывает NSOpenPanel для выбора пути к проекту
+    func selectProjectPath() {
+        let openPanel = NSOpenPanel()
+        openPanel.title = "Select Project Directory"
+        openPanel.canChooseFiles = false
+        openPanel.canChooseDirectories = true
+        openPanel.allowsMultipleSelection = false
+        
+        if openPanel.runModal() == .OK {
+            if let selectedPath = openPanel.url?.path {
+                appPath = selectedPath
+            }
+        }
+    }
+    
+    /// Поиск дубликатов с использованием jscpd
+    func runDuplicateCodeAnalysis() {
         guard !appPath.isEmpty else {
-            outputFile = "Error: Project path cannot be empty."
+            outputFile = "Error: Project path is empty. Please select a valid directory."
             return
         }
-
-        guard let scriptPath = Bundle.main.path(forResource: "analyze_dead_code", ofType: "rb") else {
-            outputFile = "Error: Script path not found."
+        
+        guard let jscpdPath = URL(string: "/Users/a.i.faizova/Developer/AppOptimizer/jscpd/bin/")?.path(),
+              FileManager.default.fileExists(atPath: jscpdPath) else {
+            outputFile = "Error: jscpd not found in the current directory. Ensure it is present and executable."
             return
         }
-
+        
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/ruby")
-        process.arguments = [scriptPath, appPath]
-
-        let outputPipe = Pipe()
-        process.standardOutput = outputPipe
-        process.standardError = outputPipe
-
+        let pipe = Pipe()
+        
+        process.executableURL = URL(fileURLWithPath: jscpdPath)
+        process.arguments = [
+            "--reporters", "json",               // Формат отчета JSON
+            "--output", "\(appPath)/jscpd-report", // Путь для сохранения отчета
+            "--blame",                           // Получить информацию о авторах дублирования
+            "--noSymlinks",                      // Исключить символические ссылки при анализе файлов
+            "--ignoreCase"                       // Игнорировать регистр символов в коде
+        ]
+        process.standardOutput = pipe
+        process.standardError = pipe
+        
         do {
             try process.run()
             process.waitUntilExit()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            if let output = String(data: outputData, encoding: .utf8) {
+            
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            if let output = String(data: data, encoding: .utf8) {
                 outputFile = output
             } else {
-                outputFile = "Error: Unable to read script output."
+                outputFile = "Error: Unable to read output from jscpd."
             }
         } catch {
-            outputFile = "Error: \(error.localizedDescription)"
+            outputFile = "Error running jscpd: \(error.localizedDescription)"
         }
     }
 }

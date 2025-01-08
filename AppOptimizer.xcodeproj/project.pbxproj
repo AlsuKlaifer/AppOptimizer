@@ -13,6 +13,9 @@
 		7A5281AD2D0F24A2005CAC69 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281AC2D0F24A2005CAC69 /* Preview Assets.xcassets */; };
 		7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5281B62D0F2562005CAC69 /* HomeView.swift */; };
 		7A5281BC2D0F7BBA005CAC69 /* analyze_dead_code.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */; };
+		7A8A41B52D2036EA00FD7D5A /* analyze_assets.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7A8A41B42D2036EA00FD7D5A /* analyze_assets.rb */; };
+		7A8A41B72D20474300FD7D5A /* analyze_libs.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7A8A41B62D20474300FD7D5A /* analyze_libs.rb */; };
+		7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		7A5281AE2D0F24A2005CAC69 /* AppOptimizer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppOptimizer.entitlements; sourceTree = "<group>"; };
 		7A5281B62D0F2562005CAC69 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = analyze_dead_code.rb; path = AppOptimizer/analyze_dead_code.rb; sourceTree = "<group>"; };
+		7A8A41B42D2036EA00FD7D5A /* analyze_assets.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = analyze_assets.rb; sourceTree = "<group>"; };
+		7A8A41B62D20474300FD7D5A /* analyze_libs.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = analyze_libs.rb; sourceTree = "<group>"; };
+		7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadCodeManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +46,8 @@
 		7A5281992D0F24A0005CAC69 = {
 			isa = PBXGroup;
 			children = (
+				7A8A41B62D20474300FD7D5A /* analyze_libs.rb */,
+				7A8A41B42D2036EA00FD7D5A /* analyze_assets.rb */,
 				7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */,
 				7A5281A42D0F24A0005CAC69 /* AppOptimizer */,
 				7A5281A32D0F24A0005CAC69 /* Products */,
@@ -79,6 +87,7 @@
 		7A5281B42D0F253D005CAC69 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -150,6 +159,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A5281BC2D0F7BBA005CAC69 /* analyze_dead_code.rb in Resources */,
+				7A8A41B72D20474300FD7D5A /* analyze_libs.rb in Resources */,
+				7A8A41B52D2036EA00FD7D5A /* analyze_assets.rb in Resources */,
 				7A5281AD2D0F24A2005CAC69 /* Preview Assets.xcassets in Resources */,
 				7A5281AA2D0F24A2005CAC69 /* Assets.xcassets in Resources */,
 			);
@@ -162,6 +173,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */,
 				7A5281A82D0F24A0005CAC69 /* ContentView.swift in Sources */,
 				7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */,
 				7A5281A62D0F24A0005CAC69 /* AppOptimizerApp.swift in Sources */,
