@@ -9,7 +9,7 @@ import Foundation
 
 class DeadCodeManager {
 
-    private let appPath: String
+    private let appPath: String?
     private let retainPublic: Bool
     private let includeAssets: Bool
     private let includeLibraries: Bool
@@ -21,111 +21,72 @@ class DeadCodeManager {
         self.includeLibraries = includeLibraries
     }
 
-    func analyzeDeadCode(outputFile: inout String) {
-        guard !appPath.isEmpty else {
-            outputFile = "Error: Project path cannot be empty."
-            return
-        }
+    private let dispatchGroup = DispatchGroup()
+    private let queue = DispatchQueue.global()
+    private var results = [
+        "Dead Code": "",
+        "Unused Assets": "",
+        "Unused Libraries": ""
+    ]
 
-        searchDeadCode(outputFile: &outputFile)
+    func analyzeDeadCode(outputFile: inout String) {
+
+        let includePublic = self.retainPublic ? "retain_public:true" : ""
+        runScriptAsync(name: "Dead Code", scriptName: "analyze_dead_code", arguments: [includePublic])
 
         if includeAssets {
-            searchUnusedAssets(outputFile: &outputFile)
+            runScriptAsync(name: "Unused Assets", scriptName: "analyze_assets")
         }
 
         if includeLibraries {
-            searchUnusedLibraries(outputFile: &outputFile)
+            runScriptAsync(name: "Unused Libraries", scriptName: "analyze_libs")
+        }
+
+        dispatchGroup.wait()
+        outputFile = results.map { "\($0):\n\($1)" }.joined(separator: "\n\n")
+    }
+
+    private func runScriptAsync(
+        name: String,
+        scriptName: String,
+        arguments: [String] = []
+    ) {
+        dispatchGroup.enter()
+        queue.async {
+            guard let appPath = self.appPath, !appPath.isEmpty else { return }
+
+            var args = arguments
+            args.insert(appPath, at: 0)
+
+            self.results[name] = self.runScript(named: scriptName, arguments: args)
+            self.dispatchGroup.leave()
         }
     }
 
-    private func searchUnusedLibraries(outputFile: inout String) {
-        guard let libScriptPath = Bundle.main.path(forResource: "analyze_libs", ofType: "rb") else {
-            outputFile = "Error: Script paths not found."
-            return
+    private func runScript(named scriptName: String, arguments: [String]) -> String {
+        guard let appPath = self.appPath,
+              let scriptPath = Bundle.main.path(forResource: scriptName, ofType: "rb")
+        else {
+            return "Error: \(scriptName) script not found."
         }
 
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/ruby")
+        process.arguments = [scriptPath] + arguments
+
         do {
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/ruby")
-            process.arguments = [libScriptPath, appPath]
-            
             try process.run()
             process.waitUntilExit()
-            
-            let unusedLibOutput: String
-            let unusedLibOutputPath = appPath + "/unused_lib.txt"
 
-            if FileManager.default.fileExists(atPath: unusedLibOutputPath) {
-                unusedLibOutput = try String(contentsOfFile: unusedLibOutputPath, encoding: .utf8)
+            let outputPath = appPath + "/\(scriptName.replacingOccurrences(of: "analyze_", with: "unused_")).txt"
+
+            if FileManager.default.fileExists(atPath: outputPath) {
+                return (try? String(contentsOfFile: outputPath, encoding: .utf8)) ?? "Error: Unable to read output file at \(outputPath)."
             } else {
-                unusedLibOutput = "Error: Output file not found at \(unusedLibOutputPath)."
+                return "Error: Output file not found at \(outputPath)."
             }
-
-            outputFile = outputFile + "\n" + "Unused Libraries: " + "\n" + unusedLibOutput
-
         } catch {
-            print("Error while searching unused Libraries: \(error.localizedDescription)")
-        }
-    }
-
-    private func searchUnusedAssets(outputFile: inout String) {
-        guard let assetsScriptPath = Bundle.main.path(forResource: "analyze_assets", ofType: "rb") else {
-            outputFile = "Error: Script for searching unused Assets not found."
-            return
-        }
-
-        do {
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/ruby")
-            process.arguments = [assetsScriptPath, appPath]
-
-            try process.run()
-            process.waitUntilExit()
-            
-            let unusedAssetsOutput: String
-            let unusedAssetsOutputPath = appPath + "/unused_assets.txt"
-
-            if FileManager.default.fileExists(atPath: unusedAssetsOutputPath) {
-                unusedAssetsOutput = try String(contentsOfFile: unusedAssetsOutputPath, encoding: .utf8)
-            } else {
-                unusedAssetsOutput = "Error: Output file not found at \(unusedAssetsOutputPath)."
-            }
-
-            outputFile = outputFile + "\n" + "Unused Assets: " + "\n" + unusedAssetsOutput
-
-        } catch {
-            print("Error while searching unused Assets: \(error.localizedDescription)")
-        }
-    }
-
-    private func searchDeadCode(outputFile: inout String) {
-        guard let deadCodeScriptPath = Bundle.main.path(forResource: "analyze_dead_code", ofType: "rb") else {
-            outputFile = "Error: Script path not found."
-            return
-        }
-
-        let retainPublicOption = retainPublic ? "retain_public:true" : ""
-
-        let processDeadCode = Process()
-        processDeadCode.executableURL = URL(fileURLWithPath: "/usr/bin/ruby")
-        processDeadCode.arguments = [deadCodeScriptPath, appPath, retainPublicOption]
-
-        do {
-            try processDeadCode.run()
-            processDeadCode.waitUntilExit()
-
-            let outputFilePath = appPath + "/periphery_output.txt"
-            let deadCodeOutput: String
-
-            if FileManager.default.fileExists(atPath: outputFilePath) {
-                deadCodeOutput = try String(contentsOfFile: outputFilePath, encoding: .utf8)
-            } else {
-                deadCodeOutput = "Error: Output file not found at \(outputFilePath)."
-            }
-
-            outputFile = deadCodeOutput
-        } catch {
-            print("Error while searching dead code: \(error.localizedDescription)")
+            return "Error: \(error.localizedDescription)"
         }
     }
 }

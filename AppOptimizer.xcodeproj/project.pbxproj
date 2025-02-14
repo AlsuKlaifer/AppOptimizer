@@ -7,18 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A3D31112D5647980031C192 /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31102D5647980031C192 /* SwiftBasicFormat */; };
+		7A3D31132D5647980031C192 /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31122D5647980031C192 /* SwiftCompilerPlugin */; };
+		7A3D31152D5647980031C192 /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31142D5647980031C192 /* SwiftDiagnostics */; };
+		7A3D31172D5647980031C192 /* SwiftIDEUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31162D5647980031C192 /* SwiftIDEUtils */; };
+		7A3D31192D5647980031C192 /* SwiftOperators in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31182D5647980031C192 /* SwiftOperators */; };
+		7A3D311C2D564B0C0031C192 /* DuplicateCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3D311B2D564B0B0031C192 /* DuplicateCodeManager.swift */; };
 		7A5281A62D0F24A0005CAC69 /* AppOptimizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5281A52D0F24A0005CAC69 /* AppOptimizerApp.swift */; };
 		7A5281A82D0F24A0005CAC69 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5281A72D0F24A0005CAC69 /* ContentView.swift */; };
 		7A5281AA2D0F24A2005CAC69 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281A92D0F24A2005CAC69 /* Assets.xcassets */; };
 		7A5281AD2D0F24A2005CAC69 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281AC2D0F24A2005CAC69 /* Preview Assets.xcassets */; };
 		7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5281B62D0F2562005CAC69 /* HomeView.swift */; };
 		7A5281BC2D0F7BBA005CAC69 /* analyze_dead_code.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */; };
-		7A8A41B52D2036EA00FD7D5A /* analyze_assets.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7A8A41B42D2036EA00FD7D5A /* analyze_assets.rb */; };
-		7A8A41B72D20474300FD7D5A /* analyze_libs.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7A8A41B62D20474300FD7D5A /* analyze_libs.rb */; };
 		7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */; };
+		7AA82AE52D564253006F5BA1 /* DuplicateCodeManager1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82AE42D564250006F5BA1 /* DuplicateCodeManager1.swift */; };
+		7ADFF8F12D316A1C00882B4B /* analyze_assets.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */; };
+		7ADFF8F22D316A1C00882B4B /* analyze_libs.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7A3D311B2D564B0B0031C192 /* DuplicateCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateCodeManager.swift; sourceTree = "<group>"; };
 		7A5281A22D0F24A0005CAC69 /* AppOptimizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppOptimizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A5281A52D0F24A0005CAC69 /* AppOptimizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOptimizerApp.swift; sourceTree = "<group>"; };
 		7A5281A72D0F24A0005CAC69 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -27,9 +35,10 @@
 		7A5281AE2D0F24A2005CAC69 /* AppOptimizer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppOptimizer.entitlements; sourceTree = "<group>"; };
 		7A5281B62D0F2562005CAC69 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = analyze_dead_code.rb; path = AppOptimizer/analyze_dead_code.rb; sourceTree = "<group>"; };
-		7A8A41B42D2036EA00FD7D5A /* analyze_assets.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = analyze_assets.rb; sourceTree = "<group>"; };
-		7A8A41B62D20474300FD7D5A /* analyze_libs.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = analyze_libs.rb; sourceTree = "<group>"; };
 		7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadCodeManager.swift; sourceTree = "<group>"; };
+		7AA82AE42D564250006F5BA1 /* DuplicateCodeManager1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateCodeManager1.swift; sourceTree = "<group>"; };
+		7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_assets.rb; path = AppOptimizer/analyze_assets.rb; sourceTree = "<group>"; };
+		7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_libs.rb; path = AppOptimizer/analyze_libs.rb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,19 +46,40 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A3D31152D5647980031C192 /* SwiftDiagnostics in Frameworks */,
+				7A3D31172D5647980031C192 /* SwiftIDEUtils in Frameworks */,
+				7A3D31132D5647980031C192 /* SwiftCompilerPlugin in Frameworks */,
+				7A3D31112D5647980031C192 /* SwiftBasicFormat in Frameworks */,
+				7A3D31192D5647980031C192 /* SwiftOperators in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A3D310F2D56476C0031C192 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7A3D311A2D564AFC0031C192 /* Duplicate */ = {
+			isa = PBXGroup;
+			children = (
+				7A3D311B2D564B0B0031C192 /* DuplicateCodeManager.swift */,
+			);
+			path = Duplicate;
+			sourceTree = "<group>";
+		};
 		7A5281992D0F24A0005CAC69 = {
 			isa = PBXGroup;
 			children = (
-				7A8A41B62D20474300FD7D5A /* analyze_libs.rb */,
-				7A8A41B42D2036EA00FD7D5A /* analyze_assets.rb */,
+				7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */,
+				7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */,
 				7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */,
 				7A5281A42D0F24A0005CAC69 /* AppOptimizer */,
+				7A3D310F2D56476C0031C192 /* Frameworks */,
 				7A5281A32D0F24A0005CAC69 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,6 +117,8 @@
 		7A5281B42D0F253D005CAC69 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				7A3D311A2D564AFC0031C192 /* Duplicate */,
+				7AA82AE42D564250006F5BA1 /* DuplicateCodeManager1.swift */,
 				7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */,
 			);
 			path = Helpers;
@@ -144,6 +176,9 @@
 				Base,
 			);
 			mainGroup = 7A5281992D0F24A0005CAC69;
+			packageReferences = (
+				7AA82AE62D56448C006F5BA1 /* XCRemoteSwiftPackageReference "swift-syntax" */,
+			);
 			productRefGroup = 7A5281A32D0F24A0005CAC69 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -159,8 +194,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A5281BC2D0F7BBA005CAC69 /* analyze_dead_code.rb in Resources */,
-				7A8A41B72D20474300FD7D5A /* analyze_libs.rb in Resources */,
-				7A8A41B52D2036EA00FD7D5A /* analyze_assets.rb in Resources */,
+				7ADFF8F22D316A1C00882B4B /* analyze_libs.rb in Resources */,
+				7ADFF8F12D316A1C00882B4B /* analyze_assets.rb in Resources */,
 				7A5281AD2D0F24A2005CAC69 /* Preview Assets.xcassets in Resources */,
 				7A5281AA2D0F24A2005CAC69 /* Assets.xcassets in Resources */,
 			);
@@ -173,8 +208,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A3D311C2D564B0C0031C192 /* DuplicateCodeManager.swift in Sources */,
 				7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */,
 				7A5281A82D0F24A0005CAC69 /* ContentView.swift in Sources */,
+				7AA82AE52D564253006F5BA1 /* DuplicateCodeManager1.swift in Sources */,
 				7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */,
 				7A5281A62D0F24A0005CAC69 /* AppOptimizerApp.swift in Sources */,
 			);
@@ -381,6 +418,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7AA82AE62D56448C006F5BA1 /* XCRemoteSwiftPackageReference "swift-syntax" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftlang/swift-syntax.git";
+			requirement = {
+				kind = exactVersion;
+				version = 509.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7A3D31102D5647980031C192 /* SwiftBasicFormat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7AA82AE62D56448C006F5BA1 /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftBasicFormat;
+		};
+		7A3D31122D5647980031C192 /* SwiftCompilerPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7AA82AE62D56448C006F5BA1 /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftCompilerPlugin;
+		};
+		7A3D31142D5647980031C192 /* SwiftDiagnostics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7AA82AE62D56448C006F5BA1 /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftDiagnostics;
+		};
+		7A3D31162D5647980031C192 /* SwiftIDEUtils */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7AA82AE62D56448C006F5BA1 /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftIDEUtils;
+		};
+		7A3D31182D5647980031C192 /* SwiftOperators */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7AA82AE62D56448C006F5BA1 /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftOperators;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7A52819A2D0F24A0005CAC69 /* Project object */;
 }

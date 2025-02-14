@@ -62,11 +62,11 @@ puts "Found libraries: #{all_libraries}"
 used_libraries = find_usage(all_libraries, project_path)
 unused_libraries = all_libraries - used_libraries
 
-output_file = File.join(project_path, "unused_lib.txt")
+output_file = File.join(project_path, "unused_libs.txt")
 File.write(output_file, unused_libraries.join("\n"))
 
-if unused_libraries.empty?
-  puts "No unused libraries found."
-else
-  puts "Unused libraries saved to #{output_file}"
-end
+#if unused_libraries.empty?
+#  puts "No unused libraries found."
+#else
+#  puts "Unused libraries saved to #{output_file}"
+#end
