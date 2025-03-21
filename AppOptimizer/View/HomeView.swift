@@ -115,8 +115,9 @@ struct HomeView: View {
         return swiftFiles
     }
 
+    /// Поиск дубликатов с использованием PDG
     func runDuplicateCodeAnalysis1() {
-        let duplicateManager = DuplicateCodeManager(appPath: appPath)
+        let duplicateManager = PDGDuplicateCodeManager(appPath: appPath)
         duplicateManager.analyzeDuplicates(outputFile: &outputFile)
     }
 
@@ -201,8 +202,7 @@ struct HomeView: View {
         }
     }
 
-    // Функция нормализации кода
-
+    /// Функция нормализации кода
     func normalizeCode(_ code: String) -> String {
         var normalized = code
 
