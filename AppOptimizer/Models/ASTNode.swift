@@ -5,17 +5,40 @@
 //  Created by Alsu Faizova on 21.03.2025.
 //
 
-struct ASTNode: Hashable {
-    enum NodeType: Hashable {
+struct ASTNode: Hashable, Codable {
+
+    // MARK: Using structures
+
+    enum NodeType: Hashable, Codable {
         case root, class1, variable, function, functionCall, value
     }
-    
-    let type: NodeType
-    let value: String
-    var children: [ASTNode] = []
-    var sourceCode: String? = nil
-    var classType: String? = nil
-    var variableType: String? = nil
+
+    // MARK: Private properties
+
+    private let type: NodeType
+    private let value: String
+    private var children: [ASTNode] = []
+    private var sourceCode: String? = nil
+    private var classType: String? = nil
+    private var variableType: String? = nil
+
+    // MARK: Lifecycle
+
+    init(
+        type: NodeType,
+        value: String,
+        sourceCode: String,
+        classType: String? = nil,
+        variableType: String? = nil
+    ) {
+        self.type = type
+        self.value = value
+        self.sourceCode = sourceCode
+        self.classType = classType
+        self.variableType = variableType
+    }
+
+    // MARK: Internal methods
     
     func similarity(to other: ASTNode, variableMapping: inout [String: String]) -> Double {
         if self.type != other.type {
@@ -31,14 +54,6 @@ struct ASTNode: Hashable {
         }
         
         return compareSubtreesIgnoringNames(self, other, &variableMapping)
-    }
-    
-    private func compareSubtreesIgnoringNames(_ node1: ASTNode, _ node2: ASTNode, _ variableMapping: inout [String: String]) -> Double {
-        let sequence1 = node1.children.map { $0.getSignature() }
-        let sequence2 = node2.children.map { $0.getSignature() }
-        
-        let lcsLength = longestCommonSubsequence(sequence1, sequence2)
-        return Double(lcsLength) / Double(max(sequence1.count, sequence2.count))
     }
 
     func longestCommonSubsequence(_ list1: [String], _ list2: [String]) -> Int {
@@ -80,5 +95,15 @@ struct ASTNode: Hashable {
             result += child.getSourceCode()
         }
         return result
+    }
+
+    // MARK: Private methods
+
+    private func compareSubtreesIgnoringNames(_ node1: ASTNode, _ node2: ASTNode, _ variableMapping: inout [String: String]) -> Double {
+        let sequence1 = node1.children.map { $0.getSignature() }
+        let sequence2 = node2.children.map { $0.getSignature() }
+        
+        let lcsLength = longestCommonSubsequence(sequence1, sequence2)
+        return Double(lcsLength) / Double(max(sequence1.count, sequence2.count))
     }
 }

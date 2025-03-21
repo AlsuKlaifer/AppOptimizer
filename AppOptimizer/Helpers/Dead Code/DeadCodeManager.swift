@@ -9,17 +9,12 @@ import Foundation
 
 class DeadCodeManager {
 
+    // MARK: Private properties
+
     private let appPath: String?
     private let retainPublic: Bool
     private let includeAssets: Bool
     private let includeLibraries: Bool
-
-    init(appPath: String, retainPublic: Bool, includeAssets: Bool, includeLibraries: Bool) {
-        self.appPath = appPath
-        self.retainPublic = retainPublic
-        self.includeAssets = includeAssets
-        self.includeLibraries = includeLibraries
-    }
 
     private let dispatchGroup = DispatchGroup()
     private let queue = DispatchQueue.global()
@@ -28,6 +23,17 @@ class DeadCodeManager {
         "Unused Assets": "",
         "Unused Libraries": ""
     ]
+
+    // MARK: Lifecycle
+
+    init(appPath: String, retainPublic: Bool, includeAssets: Bool, includeLibraries: Bool) {
+        self.appPath = appPath
+        self.retainPublic = retainPublic
+        self.includeAssets = includeAssets
+        self.includeLibraries = includeLibraries
+    }
+
+    // MARK: Internal methods
 
     func analyzeDeadCode(outputFile: inout String) {
 
@@ -45,6 +51,8 @@ class DeadCodeManager {
         dispatchGroup.wait()
         outputFile = results.map { "\($0):\n\($1)" }.joined(separator: "\n\n")
     }
+
+    // MARK: Private methods
 
     private func runScriptAsync(
         name: String,

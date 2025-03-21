@@ -1,15 +1,29 @@
+//
+//  PDGDuplicateCodeManager.swift
+//  AppOptimizer
+//
+//  Created by Alsu Faizova on 21.03.2025.
+//
+
 import Foundation
 import SwiftSyntax
 import SwiftParser
 import SwiftSyntaxBuilder
 
-class DuplicateCodeManager {
+class ASTDuplicateCodeManager {
+
+    // MARK: Properties
+
     let appPath: String
-    
+
+    // MARK: Lifecycle
+
     init(appPath: String) {
         self.appPath = appPath
     }
-    
+
+    // MARK: Internal methods
+
     func analyzeDuplicates(outputFile: inout String) {
         let fileURLs = getSwiftFileURLs(in: appPath)
         var asts: [AST] = []
@@ -29,7 +43,9 @@ class DuplicateCodeManager {
         outputFile = formatDuplicates(duplicates)
         print("outputFile:\n", outputFile)
     }
-    
+
+    // MARK: Private methods
+
     private func getSwiftFileURLs(in directory: String) -> [URL] {
         let fileManager = FileManager.default
         let directoryURL = URL(fileURLWithPath: directory)

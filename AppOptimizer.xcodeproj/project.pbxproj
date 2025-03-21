@@ -12,7 +12,7 @@
 		7A3D31152D5647980031C192 /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31142D5647980031C192 /* SwiftDiagnostics */; };
 		7A3D31172D5647980031C192 /* SwiftIDEUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31162D5647980031C192 /* SwiftIDEUtils */; };
 		7A3D31192D5647980031C192 /* SwiftOperators in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31182D5647980031C192 /* SwiftOperators */; };
-		7A3D311C2D564B0C0031C192 /* DuplicateCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3D311B2D564B0B0031C192 /* DuplicateCodeManager.swift */; };
+		7A3D311C2D564B0C0031C192 /* ASTDuplicateCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3D311B2D564B0B0031C192 /* ASTDuplicateCodeManager.swift */; };
 		7A5281A62D0F24A0005CAC69 /* AppOptimizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5281A52D0F24A0005CAC69 /* AppOptimizerApp.swift */; };
 		7A5281A82D0F24A0005CAC69 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5281A72D0F24A0005CAC69 /* ContentView.swift */; };
 		7A5281AA2D0F24A2005CAC69 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281A92D0F24A2005CAC69 /* Assets.xcassets */; };
@@ -23,12 +23,15 @@
 		7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */; };
 		7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878D2D8D61850059A4A2 /* AST.swift */; };
 		7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */; };
+		7AA887932D8D63CD0059A4A2 /* PDGGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887922D8D63CC0059A4A2 /* PDGGraph.swift */; };
+		7AA887972D8D683D0059A4A2 /* PDGDuplicateCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager.swift */; };
+		7AA8879A2D8D6B440059A4A2 /* SwiftGraph in Frameworks */ = {isa = PBXBuildFile; productRef = 7AA887992D8D6B440059A4A2 /* SwiftGraph */; };
 		7ADFF8F12D316A1C00882B4B /* analyze_assets.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */; };
 		7ADFF8F22D316A1C00882B4B /* analyze_libs.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7A3D311B2D564B0B0031C192 /* DuplicateCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateCodeManager.swift; sourceTree = "<group>"; };
+		7A3D311B2D564B0B0031C192 /* ASTDuplicateCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTDuplicateCodeManager.swift; sourceTree = "<group>"; };
 		7A5281A22D0F24A0005CAC69 /* AppOptimizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppOptimizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A5281A52D0F24A0005CAC69 /* AppOptimizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOptimizerApp.swift; sourceTree = "<group>"; };
 		7A5281A72D0F24A0005CAC69 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -41,6 +44,8 @@
 		7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTVisitor.swift; sourceTree = "<group>"; };
 		7AA8878D2D8D61850059A4A2 /* AST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AST.swift; sourceTree = "<group>"; };
 		7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTNode.swift; sourceTree = "<group>"; };
+		7AA887922D8D63CC0059A4A2 /* PDGGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGGraph.swift; sourceTree = "<group>"; };
+		7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGDuplicateCodeManager.swift; sourceTree = "<group>"; };
 		7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_assets.rb; path = AppOptimizer/analyze_assets.rb; sourceTree = "<group>"; };
 		7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_libs.rb; path = AppOptimizer/analyze_libs.rb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -55,6 +60,7 @@
 				7A3D31132D5647980031C192 /* SwiftCompilerPlugin in Frameworks */,
 				7A3D31112D5647980031C192 /* SwiftBasicFormat in Frameworks */,
 				7A3D31192D5647980031C192 /* SwiftOperators in Frameworks */,
+				7AA8879A2D8D6B440059A4A2 /* SwiftGraph in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,7 +77,8 @@
 		7A3D311A2D564AFC0031C192 /* Duplicate */ = {
 			isa = PBXGroup;
 			children = (
-				7A3D311B2D564B0B0031C192 /* DuplicateCodeManager.swift */,
+				7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager.swift */,
+				7A3D311B2D564B0B0031C192 /* ASTDuplicateCodeManager.swift */,
 			);
 			path = Duplicate;
 			sourceTree = "<group>";
@@ -139,6 +146,7 @@
 		7AA8878A2D8D614A0059A4A2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7AA887922D8D63CC0059A4A2 /* PDGGraph.swift */,
 				7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */,
 				7AA8878D2D8D61850059A4A2 /* AST.swift */,
 				7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */,
@@ -200,6 +208,7 @@
 			mainGroup = 7A5281992D0F24A0005CAC69;
 			packageReferences = (
 				7AA82AE62D56448C006F5BA1 /* XCRemoteSwiftPackageReference "swift-syntax" */,
+				7AA887982D8D6B440059A4A2 /* XCRemoteSwiftPackageReference "SwiftGraph" */,
 			);
 			productRefGroup = 7A5281A32D0F24A0005CAC69 /* Products */;
 			projectDirPath = "";
@@ -230,13 +239,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A3D311C2D564B0C0031C192 /* DuplicateCodeManager.swift in Sources */,
+				7A3D311C2D564B0C0031C192 /* ASTDuplicateCodeManager.swift in Sources */,
 				7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */,
 				7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */,
 				7A5281A82D0F24A0005CAC69 /* ContentView.swift in Sources */,
+				7AA887932D8D63CD0059A4A2 /* PDGGraph.swift in Sources */,
 				7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */,
 				7A5281A62D0F24A0005CAC69 /* AppOptimizerApp.swift in Sources */,
 				7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */,
+				7AA887972D8D683D0059A4A2 /* PDGDuplicateCodeManager.swift in Sources */,
 				7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -452,6 +463,14 @@
 				version = 509.0.0;
 			};
 		};
+		7AA887982D8D6B440059A4A2 /* XCRemoteSwiftPackageReference "SwiftGraph" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/davecom/SwiftGraph";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -479,6 +498,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7AA82AE62D56448C006F5BA1 /* XCRemoteSwiftPackageReference "swift-syntax" */;
 			productName = SwiftOperators;
+		};
+		7AA887992D8D6B440059A4A2 /* SwiftGraph */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7AA887982D8D6B440059A4A2 /* XCRemoteSwiftPackageReference "SwiftGraph" */;
+			productName = SwiftGraph;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
