@@ -20,7 +20,9 @@
 		7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5281B62D0F2562005CAC69 /* HomeView.swift */; };
 		7A5281BC2D0F7BBA005CAC69 /* analyze_dead_code.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */; };
 		7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */; };
-		7AA82AE52D564253006F5BA1 /* DuplicateCodeManager1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82AE42D564250006F5BA1 /* DuplicateCodeManager1.swift */; };
+		7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */; };
+		7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878D2D8D61850059A4A2 /* AST.swift */; };
+		7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */; };
 		7ADFF8F12D316A1C00882B4B /* analyze_assets.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */; };
 		7ADFF8F22D316A1C00882B4B /* analyze_libs.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */; };
 /* End PBXBuildFile section */
@@ -36,7 +38,9 @@
 		7A5281B62D0F2562005CAC69 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = analyze_dead_code.rb; path = AppOptimizer/analyze_dead_code.rb; sourceTree = "<group>"; };
 		7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadCodeManager.swift; sourceTree = "<group>"; };
-		7AA82AE42D564250006F5BA1 /* DuplicateCodeManager1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateCodeManager1.swift; sourceTree = "<group>"; };
+		7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTVisitor.swift; sourceTree = "<group>"; };
+		7AA8878D2D8D61850059A4A2 /* AST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AST.swift; sourceTree = "<group>"; };
+		7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTNode.swift; sourceTree = "<group>"; };
 		7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_assets.rb; path = AppOptimizer/analyze_assets.rb; sourceTree = "<group>"; };
 		7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_libs.rb; path = AppOptimizer/analyze_libs.rb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -95,6 +99,7 @@
 		7A5281A42D0F24A0005CAC69 /* AppOptimizer */ = {
 			isa = PBXGroup;
 			children = (
+				7AA8878A2D8D614A0059A4A2 /* Models */,
 				7A5281B52D0F2554005CAC69 /* View */,
 				7A5281B42D0F253D005CAC69 /* Helpers */,
 				7A5281A52D0F24A0005CAC69 /* AppOptimizerApp.swift */,
@@ -117,9 +122,8 @@
 		7A5281B42D0F253D005CAC69 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				7AA887912D8D62180059A4A2 /* Dead Code */,
 				7A3D311A2D564AFC0031C192 /* Duplicate */,
-				7AA82AE42D564250006F5BA1 /* DuplicateCodeManager1.swift */,
-				7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -130,6 +134,24 @@
 				7A5281B62D0F2562005CAC69 /* HomeView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		7AA8878A2D8D614A0059A4A2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */,
+				7AA8878D2D8D61850059A4A2 /* AST.swift */,
+				7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7AA887912D8D62180059A4A2 /* Dead Code */ = {
+			isa = PBXGroup;
+			children = (
+				7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */,
+			);
+			path = "Dead Code";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -209,11 +231,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A3D311C2D564B0C0031C192 /* DuplicateCodeManager.swift in Sources */,
+				7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */,
 				7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */,
 				7A5281A82D0F24A0005CAC69 /* ContentView.swift in Sources */,
-				7AA82AE52D564253006F5BA1 /* DuplicateCodeManager1.swift in Sources */,
 				7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */,
 				7A5281A62D0F24A0005CAC69 /* AppOptimizerApp.swift in Sources */,
+				7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */,
+				7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
