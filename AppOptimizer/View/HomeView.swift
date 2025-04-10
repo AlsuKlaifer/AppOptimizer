@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftParser
 import AppKit
 
 struct HomeView: View {
@@ -117,8 +118,141 @@ struct HomeView: View {
 
     /// Поиск дубликатов с использованием PDG
     func runDuplicateCodeAnalysis1() {
-        let duplicateManager = PDGDuplicateCodeManager(appPath: appPath)
-        duplicateManager.analyzeDuplicates(outputFile: &outputFile)
+        let source = """
+        class FirstViewController: UIViewController {
+
+            let round = UIView()
+            let square = UIView()
+
+            override func viewDidLoad() {
+                super.viewDidLoad()
+
+                view.backgroundColor = .white
+
+                setupSquare()
+            }
+
+            private func setupSquare() {
+                square.backgroundColor = .blue
+                square.translatesAutoresizingMaskIntoConstraints = false
+
+                view.addSubview(square)
+                NSLayoutConstraint.activate([
+                    square.widthAnchor.constraint(equalToConstant: 200),
+                    square.heightAnchor.constraint(equalToConstant: 200),
+                    square.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                    square.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+                ])
+            }
+        }
+        class SecondViewController: UIViewController {
+
+            let round = UIView()
+            let square = UIView()
+
+            override func viewDidLoad() {
+                super.viewDidLoad()
+
+                view.backgroundColor = .blue
+
+                setupSquare()
+                setupRound()
+            }
+
+            private func setupSquare() {
+                square.backgroundColor = .white
+                square.translatesAutoresizingMaskIntoConstraints = false
+
+                view.addSubview(square)
+                NSLayoutConstraint.activate([
+                    square.widthAnchor.constraint(equalToConstant: 200),
+                    square.heightAnchor.constraint(equalToConstant: 200),
+                    square.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                    square.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+                ])
+            }
+
+            private func setupRound() {
+                round.backgroundColor = .red
+                round.layer.cornerRadius = 100
+                round.translatesAutoresizingMaskIntoConstraints = false
+
+                view.addSubview(round)
+                NSLayoutConstraint.activate([
+                    round.widthAnchor.constraint(equalToConstant: 300),
+                    round.heightAnchor.constraint(equalToConstant: 300),
+                    round.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                    round.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+                ])
+            }
+        }
+        """
+//        let source = """
+//        class Test {
+//            // Вариант 1
+//            func add1(a: Int, b: Int) -> Int { return a + b }
+//            
+//            // Вариант 2 (клон с другими именами)
+//            func add2(x: Int, y: Int) -> Int { return x + y }
+//            
+//            // Вариант 3 (почти клон с дополнительной переменной)
+//            func sum(a: Int, b: Int) -> Int {
+//                let res = a + b
+//                return res
+//            }
+//            
+//            // Вариант 4 (другая логика)
+//            func mult(a: Int, b: Int) -> Int { return a * b }
+//        }
+//        """
+
+        let visitor = ASTVisitor(viewMode: .sourceAccurate)
+        visitor.visit(source: source)
+
+        let builder = PDGBuilder(ast: visitor.ast)
+        builder.build()
+
+        let subgraphs = builder.extractNormalizedSubgraphs()
+
+        print("\n=== Similarity Matrix ===")
+        for i in 0..<subgraphs.count {
+            let nameI = subgraphs[i].nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
+            for j in (i+1)..<subgraphs.count {
+                let nameJ = subgraphs[j].nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
+                let sim = subgraphs[i].similarity(to: subgraphs[j])
+                print("\(nameI) vs \(nameJ): \(String(format: "%.2f", sim))")
+            }
+        }
+
+        let clones = findClones(subgraphs: subgraphs, threshold: 0.7)
+        print("\n=== Detected Clones (threshold: 0.7) ===")
+        for (g1, g2, sim) in clones {
+            let name1 = g1.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
+            let name2 = g2.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
+            print("\(name1) ~ \(name2): \(String(format: "%.2f", sim)) similarity")
+        }
+
+        func findClones(subgraphs: [PDGSubgraph], threshold: Double = 0.85) -> [(PDGSubgraph, PDGSubgraph, Double)] {
+            var results = [(PDGSubgraph, PDGSubgraph, Double)]()
+            var processed = Set<Int>()
+            
+            for i in 0..<subgraphs.count {
+                guard !processed.contains(i) else { continue }
+                var currentGroup = [subgraphs[i]]
+                
+                for j in (i+1)..<subgraphs.count {
+                    let similarity = subgraphs[i].similarity(to: subgraphs[j])
+                    if similarity >= threshold {
+                        results.append((subgraphs[i], subgraphs[j], similarity))
+                        processed.insert(j)
+                    }
+                }
+            }
+            
+            return results.sorted { $0.2 > $1.2 }
+        }
+//        let duplicateManager = PDGDuplicateCodeManager(appPath: appPath)
+//        duplicateManager.analyzeDuplicates(outputFile: &outputFile)
     }
 
     /// Поиск дубликатов с использованием jscpd

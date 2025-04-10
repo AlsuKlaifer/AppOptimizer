@@ -23,9 +23,17 @@
 		7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */; };
 		7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878D2D8D61850059A4A2 /* AST.swift */; };
 		7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */; };
-		7AA887932D8D63CD0059A4A2 /* PDGGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887922D8D63CC0059A4A2 /* PDGGraph.swift */; };
-		7AA887972D8D683D0059A4A2 /* PDGDuplicateCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager.swift */; };
+		7AA887932D8D63CD0059A4A2 /* PDGGraph2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887922D8D63CC0059A4A2 /* PDGGraph2.swift */; };
+		7AA887972D8D683D0059A4A2 /* PDGDuplicateCodeManager2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager2.swift */; };
 		7AA8879A2D8D6B440059A4A2 /* SwiftGraph in Frameworks */ = {isa = PBXBuildFile; productRef = 7AA887992D8D6B440059A4A2 /* SwiftGraph */; };
+		7AA887A92DA4477E0059A4A2 /* ASTVisitor2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887A82DA4477E0059A4A2 /* ASTVisitor2.swift */; };
+		7AA887AB2DA4484F0059A4A2 /* AST2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887AA2DA4484F0059A4A2 /* AST2.swift */; };
+		7AA887AF2DA44C6D0059A4A2 /* PDGNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887AE2DA44C6D0059A4A2 /* PDGNode.swift */; };
+		7AA887B12DA44D280059A4A2 /* PDGBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B02DA44D270059A4A2 /* PDGBuilder.swift */; };
+		7AA887B32DA44D590059A4A2 /* PDGDuplicateCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B22DA44D590059A4A2 /* PDGDuplicateCodeManager.swift */; };
+		7AA887B52DA44E300059A4A2 /* PDGGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B42DA44E2F0059A4A2 /* PDGGraph.swift */; };
+		7AA887B82DA451B50059A4A2 /* PDGEdgeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B72DA451B40059A4A2 /* PDGEdgeType.swift */; };
+		7AA887BA2DA455AD0059A4A2 /* PDGSubgraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B92DA455A70059A4A2 /* PDGSubgraph.swift */; };
 		7ADFF8F12D316A1C00882B4B /* analyze_assets.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */; };
 		7ADFF8F22D316A1C00882B4B /* analyze_libs.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */; };
 /* End PBXBuildFile section */
@@ -44,8 +52,16 @@
 		7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTVisitor.swift; sourceTree = "<group>"; };
 		7AA8878D2D8D61850059A4A2 /* AST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AST.swift; sourceTree = "<group>"; };
 		7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTNode.swift; sourceTree = "<group>"; };
-		7AA887922D8D63CC0059A4A2 /* PDGGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGGraph.swift; sourceTree = "<group>"; };
-		7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGDuplicateCodeManager.swift; sourceTree = "<group>"; };
+		7AA887922D8D63CC0059A4A2 /* PDGGraph2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGGraph2.swift; sourceTree = "<group>"; };
+		7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGDuplicateCodeManager2.swift; sourceTree = "<group>"; };
+		7AA887A82DA4477E0059A4A2 /* ASTVisitor2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTVisitor2.swift; sourceTree = "<group>"; };
+		7AA887AA2DA4484F0059A4A2 /* AST2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AST2.swift; sourceTree = "<group>"; };
+		7AA887AE2DA44C6D0059A4A2 /* PDGNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGNode.swift; sourceTree = "<group>"; };
+		7AA887B02DA44D270059A4A2 /* PDGBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGBuilder.swift; sourceTree = "<group>"; };
+		7AA887B22DA44D590059A4A2 /* PDGDuplicateCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGDuplicateCodeManager.swift; sourceTree = "<group>"; };
+		7AA887B42DA44E2F0059A4A2 /* PDGGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGGraph.swift; sourceTree = "<group>"; };
+		7AA887B72DA451B40059A4A2 /* PDGEdgeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGEdgeType.swift; sourceTree = "<group>"; };
+		7AA887B92DA455A70059A4A2 /* PDGSubgraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGSubgraph.swift; sourceTree = "<group>"; };
 		7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_assets.rb; path = AppOptimizer/analyze_assets.rb; sourceTree = "<group>"; };
 		7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_libs.rb; path = AppOptimizer/analyze_libs.rb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,8 +93,8 @@
 		7A3D311A2D564AFC0031C192 /* Duplicate */ = {
 			isa = PBXGroup;
 			children = (
-				7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager.swift */,
-				7A3D311B2D564B0B0031C192 /* ASTDuplicateCodeManager.swift */,
+				7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager2.swift */,
+				7AA887B02DA44D270059A4A2 /* PDGBuilder.swift */,
 			);
 			path = Duplicate;
 			sourceTree = "<group>";
@@ -106,6 +122,7 @@
 		7A5281A42D0F24A0005CAC69 /* AppOptimizer */ = {
 			isa = PBXGroup;
 			children = (
+				7AA887B62DA44F0E0059A4A2 /* Managers */,
 				7AA8878A2D8D614A0059A4A2 /* Models */,
 				7A5281B52D0F2554005CAC69 /* View */,
 				7A5281B42D0F253D005CAC69 /* Helpers */,
@@ -146,10 +163,11 @@
 		7AA8878A2D8D614A0059A4A2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				7AA887922D8D63CC0059A4A2 /* PDGGraph.swift */,
-				7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */,
-				7AA8878D2D8D61850059A4A2 /* AST.swift */,
-				7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */,
+				7AA887AD2DA44C610059A4A2 /* PDG */,
+				7AA887AC2DA44C1A0059A4A2 /* AST */,
+				7AA887922D8D63CC0059A4A2 /* PDGGraph2.swift */,
+				7AA887AA2DA4484F0059A4A2 /* AST2.swift */,
+				7AA887A82DA4477E0059A4A2 /* ASTVisitor2.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -160,6 +178,36 @@
 				7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */,
 			);
 			path = "Dead Code";
+			sourceTree = "<group>";
+		};
+		7AA887AC2DA44C1A0059A4A2 /* AST */ = {
+			isa = PBXGroup;
+			children = (
+				7AA8878D2D8D61850059A4A2 /* AST.swift */,
+				7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */,
+				7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */,
+			);
+			path = AST;
+			sourceTree = "<group>";
+		};
+		7AA887AD2DA44C610059A4A2 /* PDG */ = {
+			isa = PBXGroup;
+			children = (
+				7AA887B92DA455A70059A4A2 /* PDGSubgraph.swift */,
+				7AA887B72DA451B40059A4A2 /* PDGEdgeType.swift */,
+				7AA887B42DA44E2F0059A4A2 /* PDGGraph.swift */,
+				7AA887AE2DA44C6D0059A4A2 /* PDGNode.swift */,
+			);
+			path = PDG;
+			sourceTree = "<group>";
+		};
+		7AA887B62DA44F0E0059A4A2 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				7AA887B22DA44D590059A4A2 /* PDGDuplicateCodeManager.swift */,
+				7A3D311B2D564B0B0031C192 /* ASTDuplicateCodeManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -243,11 +291,19 @@
 				7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */,
 				7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */,
 				7A5281A82D0F24A0005CAC69 /* ContentView.swift in Sources */,
-				7AA887932D8D63CD0059A4A2 /* PDGGraph.swift in Sources */,
+				7AA887AB2DA4484F0059A4A2 /* AST2.swift in Sources */,
+				7AA887932D8D63CD0059A4A2 /* PDGGraph2.swift in Sources */,
+				7AA887B82DA451B50059A4A2 /* PDGEdgeType.swift in Sources */,
+				7AA887B52DA44E300059A4A2 /* PDGGraph.swift in Sources */,
+				7AA887AF2DA44C6D0059A4A2 /* PDGNode.swift in Sources */,
 				7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */,
 				7A5281A62D0F24A0005CAC69 /* AppOptimizerApp.swift in Sources */,
+				7AA887BA2DA455AD0059A4A2 /* PDGSubgraph.swift in Sources */,
+				7AA887B12DA44D280059A4A2 /* PDGBuilder.swift in Sources */,
+				7AA887A92DA4477E0059A4A2 /* ASTVisitor2.swift in Sources */,
+				7AA887B32DA44D590059A4A2 /* PDGDuplicateCodeManager.swift in Sources */,
 				7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */,
-				7AA887972D8D683D0059A4A2 /* PDGDuplicateCodeManager.swift in Sources */,
+				7AA887972D8D683D0059A4A2 /* PDGDuplicateCodeManager2.swift in Sources */,
 				7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

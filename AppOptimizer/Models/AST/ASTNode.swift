@@ -5,22 +5,24 @@
 //  Created by Alsu Faizova on 21.03.2025.
 //
 
-struct ASTNode: Hashable, Codable {
+enum NodeType: String, Hashable, Codable {
+    case root, class1, variable, function, functionCall, value
+}
 
-    // MARK: Using structures
+class ASTNode {
 
-    enum NodeType: Hashable, Codable {
-        case root, class1, variable, function, functionCall, value
-    }
+    // MARK: Properties
 
-    // MARK: Private properties
+    let type: NodeType
+    let value: String
+    var children: [ASTNode] = []
 
-    private let type: NodeType
-    private let value: String
-    private var children: [ASTNode] = []
-    private var sourceCode: String? = nil
-    private var classType: String? = nil
-    private var variableType: String? = nil
+    var sourceCode: String? = nil
+    var classType: String? = nil
+    var variableType: String? = nil
+    var sourceRange: Range<String.Index>?
+
+    weak var parent: ASTNode?
 
     // MARK: Lifecycle
 
@@ -29,17 +31,26 @@ struct ASTNode: Hashable, Codable {
         value: String,
         sourceCode: String,
         classType: String? = nil,
-        variableType: String? = nil
+        variableType: String? = nil,
+        parent: ASTNode? = nil,
+        sourceRange: Range<String.Index>? = nil
     ) {
         self.type = type
         self.value = value
         self.sourceCode = sourceCode
         self.classType = classType
         self.variableType = variableType
+        self.parent = parent
+        self.sourceRange = sourceRange
     }
 
     // MARK: Internal methods
-    
+
+    func addChild(_ node: ASTNode) {
+        node.parent = self
+        children.append(node)
+    }
+
     func similarity(to other: ASTNode, variableMapping: inout [String: String]) -> Double {
         if self.type != other.type {
             return 0.0
@@ -105,5 +116,16 @@ struct ASTNode: Hashable, Codable {
         
         let lcsLength = longestCommonSubsequence(sequence1, sequence2)
         return Double(lcsLength) / Double(max(sequence1.count, sequence2.count))
+    }
+}
+
+extension ASTNode: Hashable {
+    static func == (lhs: ASTNode, rhs: ASTNode) -> Bool {
+        return lhs.type == rhs.type && lhs.value == rhs.value
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(type)
+        hasher.combine(value)
     }
 }

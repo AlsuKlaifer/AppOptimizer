@@ -1,0 +1,140 @@
+//
+//  ASTVisitor.swift
+//  AppOptimizer
+//
+//  Created by Alsu Faizova on 21.03.2025.
+//
+
+import Foundation
+import SwiftSyntax
+import SwiftParser
+
+class ASTVisitor: SyntaxVisitor {
+    
+    // MARK: - Properties
+    
+    let ast = AST()
+    private var currentParent: ASTNode?
+    private var currentSource: String = ""
+    private var sourceLocationConverter: SourceLocationConverter?
+    private var variableNormalizationMap = [String: String]()
+    private var currentVariableIndex = 0
+    private var functionCount = 0
+    private var nodeStack = [ASTNode]()
+        
+    override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
+        let classNode = ASTNode(
+            type: .class1,
+            value: node.name.text,
+            sourceCode: node.description.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+        pushNode(classNode)
+        return .visitChildren
+    }
+    
+    override func visitPost(_ node: ClassDeclSyntax) {
+        popNode()
+    }
+    
+    override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
+        let functionNode = ASTNode(
+            type: .function,
+            value: node.identifier.text,
+            sourceCode: node.description.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+        pushNode(functionNode)
+        return .visitChildren
+    }
+    
+    override func visitPost(_ node: FunctionDeclSyntax) {
+        popNode()
+    }
+    
+    override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
+        guard currentParent != nil else { return .skipChildren }
+        
+        for binding in node.bindings {
+            if let identifier = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text {
+                let variableNode = ASTNode(
+                    type: .variable,
+                    value: identifier,
+                    sourceCode: node.description.trimmingCharacters(in: .whitespacesAndNewlines),
+                    variableType: binding.typeAnnotation?.type.description
+                )
+                addNodeToCurrentParent(variableNode)
+            }
+        }
+        return .skipChildren
+    }
+    
+    private func pushNode(_ node: ASTNode) {
+        addNodeToCurrentParent(node)
+        nodeStack.append(currentParent ?? ast.root)
+        currentParent = node
+    }
+    
+    private func popNode() {
+        currentParent = nodeStack.popLast()
+    }
+    
+    private func addNodeToCurrentParent(_ node: ASTNode) {
+        if let parent = currentParent {
+            parent.addChild(node)
+        } else {
+            ast.root.addChild(node)
+        }
+    }
+
+    // MARK: - Public Interface
+    
+    func visit(source: String) {
+        self.currentSource = source
+        let sourceFile = Parser.parse(source: source)
+        self.walk(sourceFile)
+        print("Found \(functionCount) functions during visitation")
+    }
+    
+    // MARK: - SyntaxVisitor Overrides
+    
+    // MARK: - Private Helpers
+    
+    private func safeSourceRange(for syntaxNode: SyntaxProtocol) -> Range<String.Index>? {
+        guard let converter = sourceLocationConverter else { return nil }
+        
+        let startPosition = syntaxNode.positionAfterSkippingLeadingTrivia
+        let endPosition = syntaxNode.endPositionBeforeTrailingTrivia
+        
+        let startOffset = converter.location(for: startPosition).offset
+        let endOffset = converter.location(for: endPosition).offset
+        
+        guard startOffset >= 0,
+              endOffset <= currentSource.count,
+              startOffset <= endOffset else {
+            return nil
+        }
+        
+        let startIndex = currentSource.index(currentSource.startIndex, offsetBy: startOffset)
+        let endIndex = currentSource.index(currentSource.startIndex, offsetBy: endOffset)
+        print("Range: \(startOffset)...\(endOffset) for \(type(of: syntaxNode))")
+        return startIndex..<endIndex
+    }
+    
+//    private func addNodeToHierarchy(_ node: ASTNode) {
+//        if let parent = currentParent {
+//            parent.addChild(node)
+//        } else {
+//            ast.root.addChild(node)
+//        }
+//        currentParent = node
+//    }
+    
+    private func normalizeVariableName(_ original: String) -> String {
+        if let normalized = variableNormalizationMap[original] {
+            return normalized
+        }
+        let normalized = "var\(currentVariableIndex)"
+        variableNormalizationMap[original] = normalized
+        currentVariableIndex += 1
+        return normalized
+    }
+}
