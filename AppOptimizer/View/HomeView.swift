@@ -83,7 +83,7 @@ struct HomeView: View {
             includeLibraries: includeLibraries
         )
 
-        deadCodeManager.analyzeDeadCode(outputFile: &outputFile)
+        deadCodeManager.analyze(outputFile: &outputFile)
     }
     
     /// Открывает NSOpenPanel для выбора пути к проекту

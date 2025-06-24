@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A0938082E0B357300B9C37B /* DeadCodeAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0938072E0B357200B9C37B /* DeadCodeAnalyzer.swift */; };
+		7A09380B2E0B35CE00B9C37B /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A09380A2E0B35C800B9C37B /* FileCache.swift */; };
+		7A09380D2E0B35E400B9C37B /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A09380C2E0B35E300B9C37B /* Shell.swift */; };
+		7A09380F2E0B362C00B9C37B /* AssetUsageAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A09380E2E0B362C00B9C37B /* AssetUsageAnalyzer.swift */; };
+		7A0938112E0B364500B9C37B /* LibraryAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0938102E0B364400B9C37B /* LibraryAnalyzer.swift */; };
+		7A0938132E0B3FEA00B9C37B /* ProjectFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0938122E0B3FE900B9C37B /* ProjectFile.swift */; };
 		7A3D31112D5647980031C192 /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31102D5647980031C192 /* SwiftBasicFormat */; };
 		7A3D31132D5647980031C192 /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31122D5647980031C192 /* SwiftCompilerPlugin */; };
 		7A3D31152D5647980031C192 /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31142D5647980031C192 /* SwiftDiagnostics */; };
@@ -18,26 +24,26 @@
 		7A5281AA2D0F24A2005CAC69 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281A92D0F24A2005CAC69 /* Assets.xcassets */; };
 		7A5281AD2D0F24A2005CAC69 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281AC2D0F24A2005CAC69 /* Preview Assets.xcassets */; };
 		7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5281B62D0F2562005CAC69 /* HomeView.swift */; };
-		7A5281BC2D0F7BBA005CAC69 /* analyze_dead_code.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */; };
 		7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */; };
 		7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */; };
 		7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878D2D8D61850059A4A2 /* AST.swift */; };
 		7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */; };
-		7AA887932D8D63CD0059A4A2 /* PDGGraph2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887922D8D63CC0059A4A2 /* PDGGraph2.swift */; };
 		7AA8879A2D8D6B440059A4A2 /* SwiftGraph in Frameworks */ = {isa = PBXBuildFile; productRef = 7AA887992D8D6B440059A4A2 /* SwiftGraph */; };
-		7AA887A92DA4477E0059A4A2 /* ASTVisitor2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887A82DA4477E0059A4A2 /* ASTVisitor2.swift */; };
-		7AA887AB2DA4484F0059A4A2 /* AST2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887AA2DA4484F0059A4A2 /* AST2.swift */; };
 		7AA887AF2DA44C6D0059A4A2 /* PDGNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887AE2DA44C6D0059A4A2 /* PDGNode.swift */; };
 		7AA887B12DA44D280059A4A2 /* PDGBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B02DA44D270059A4A2 /* PDGBuilder.swift */; };
 		7AA887B32DA44D590059A4A2 /* PDGDuplicateCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B22DA44D590059A4A2 /* PDGDuplicateCodeManager.swift */; };
 		7AA887B52DA44E300059A4A2 /* PDGGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B42DA44E2F0059A4A2 /* PDGGraph.swift */; };
 		7AA887B82DA451B50059A4A2 /* PDGEdgeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B72DA451B40059A4A2 /* PDGEdgeType.swift */; };
 		7AA887BA2DA455AD0059A4A2 /* PDGSubgraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887B92DA455A70059A4A2 /* PDGSubgraph.swift */; };
-		7ADFF8F12D316A1C00882B4B /* analyze_assets.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */; };
-		7ADFF8F22D316A1C00882B4B /* analyze_libs.rb in Resources */ = {isa = PBXBuildFile; fileRef = 7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7A0938072E0B357200B9C37B /* DeadCodeAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadCodeAnalyzer.swift; sourceTree = "<group>"; };
+		7A09380A2E0B35C800B9C37B /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
+		7A09380C2E0B35E300B9C37B /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
+		7A09380E2E0B362C00B9C37B /* AssetUsageAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetUsageAnalyzer.swift; sourceTree = "<group>"; };
+		7A0938102E0B364400B9C37B /* LibraryAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAnalyzer.swift; sourceTree = "<group>"; };
+		7A0938122E0B3FE900B9C37B /* ProjectFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFile.swift; sourceTree = "<group>"; };
 		7A3D311B2D564B0B0031C192 /* ASTDuplicateCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTDuplicateCodeManager.swift; sourceTree = "<group>"; };
 		7A5281A22D0F24A0005CAC69 /* AppOptimizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppOptimizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A5281A52D0F24A0005CAC69 /* AppOptimizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOptimizerApp.swift; sourceTree = "<group>"; };
@@ -46,22 +52,16 @@
 		7A5281AC2D0F24A2005CAC69 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7A5281AE2D0F24A2005CAC69 /* AppOptimizer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppOptimizer.entitlements; sourceTree = "<group>"; };
 		7A5281B62D0F2562005CAC69 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = analyze_dead_code.rb; path = AppOptimizer/analyze_dead_code.rb; sourceTree = "<group>"; };
 		7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadCodeManager.swift; sourceTree = "<group>"; };
 		7AA8878B2D8D615A0059A4A2 /* ASTVisitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTVisitor.swift; sourceTree = "<group>"; };
 		7AA8878D2D8D61850059A4A2 /* AST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AST.swift; sourceTree = "<group>"; };
 		7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTNode.swift; sourceTree = "<group>"; };
-		7AA887922D8D63CC0059A4A2 /* PDGGraph2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGGraph2.swift; sourceTree = "<group>"; };
-		7AA887A82DA4477E0059A4A2 /* ASTVisitor2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTVisitor2.swift; sourceTree = "<group>"; };
-		7AA887AA2DA4484F0059A4A2 /* AST2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AST2.swift; sourceTree = "<group>"; };
 		7AA887AE2DA44C6D0059A4A2 /* PDGNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGNode.swift; sourceTree = "<group>"; };
 		7AA887B02DA44D270059A4A2 /* PDGBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGBuilder.swift; sourceTree = "<group>"; };
 		7AA887B22DA44D590059A4A2 /* PDGDuplicateCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGDuplicateCodeManager.swift; sourceTree = "<group>"; };
 		7AA887B42DA44E2F0059A4A2 /* PDGGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGGraph.swift; sourceTree = "<group>"; };
 		7AA887B72DA451B40059A4A2 /* PDGEdgeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGEdgeType.swift; sourceTree = "<group>"; };
 		7AA887B92DA455A70059A4A2 /* PDGSubgraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGSubgraph.swift; sourceTree = "<group>"; };
-		7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_assets.rb; path = AppOptimizer/analyze_assets.rb; sourceTree = "<group>"; };
-		7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = analyze_libs.rb; path = AppOptimizer/analyze_libs.rb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +81,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A0938092E0B35C200B9C37B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				7A0938122E0B3FE900B9C37B /* ProjectFile.swift */,
+				7A09380C2E0B35E300B9C37B /* Shell.swift */,
+				7A09380A2E0B35C800B9C37B /* FileCache.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		7A3D310F2D56476C0031C192 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -99,9 +109,6 @@
 		7A5281992D0F24A0005CAC69 = {
 			isa = PBXGroup;
 			children = (
-				7ADFF8EF2D316A1C00882B4B /* analyze_assets.rb */,
-				7ADFF8F02D316A1C00882B4B /* analyze_libs.rb */,
-				7A5281BB2D0F7BBA005CAC69 /* analyze_dead_code.rb */,
 				7A5281A42D0F24A0005CAC69 /* AppOptimizer */,
 				7A3D310F2D56476C0031C192 /* Frameworks */,
 				7A5281A32D0F24A0005CAC69 /* Products */,
@@ -119,10 +126,11 @@
 		7A5281A42D0F24A0005CAC69 /* AppOptimizer */ = {
 			isa = PBXGroup;
 			children = (
+				7A0938092E0B35C200B9C37B /* Helpers */,
 				7AA887B62DA44F0E0059A4A2 /* Managers */,
 				7AA8878A2D8D614A0059A4A2 /* Models */,
 				7A5281B52D0F2554005CAC69 /* View */,
-				7A5281B42D0F253D005CAC69 /* Helpers */,
+				7A5281B42D0F253D005CAC69 /* Modules */,
 				7A5281A52D0F24A0005CAC69 /* AppOptimizerApp.swift */,
 				7A5281A72D0F24A0005CAC69 /* ContentView.swift */,
 				7A5281A92D0F24A2005CAC69 /* Assets.xcassets */,
@@ -140,13 +148,13 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		7A5281B42D0F253D005CAC69 /* Helpers */ = {
+		7A5281B42D0F253D005CAC69 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
 				7AA887912D8D62180059A4A2 /* Dead Code */,
 				7A3D311A2D564AFC0031C192 /* Duplicate */,
 			);
-			path = Helpers;
+			path = Modules;
 			sourceTree = "<group>";
 		};
 		7A5281B52D0F2554005CAC69 /* View */ = {
@@ -162,9 +170,6 @@
 			children = (
 				7AA887AD2DA44C610059A4A2 /* PDG */,
 				7AA887AC2DA44C1A0059A4A2 /* AST */,
-				7AA887922D8D63CC0059A4A2 /* PDGGraph2.swift */,
-				7AA887AA2DA4484F0059A4A2 /* AST2.swift */,
-				7AA887A82DA4477E0059A4A2 /* ASTVisitor2.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -172,6 +177,9 @@
 		7AA887912D8D62180059A4A2 /* Dead Code */ = {
 			isa = PBXGroup;
 			children = (
+				7A0938102E0B364400B9C37B /* LibraryAnalyzer.swift */,
+				7A09380E2E0B362C00B9C37B /* AssetUsageAnalyzer.swift */,
+				7A0938072E0B357200B9C37B /* DeadCodeAnalyzer.swift */,
 				7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */,
 			);
 			path = "Dead Code";
@@ -269,9 +277,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A5281BC2D0F7BBA005CAC69 /* analyze_dead_code.rb in Resources */,
-				7ADFF8F22D316A1C00882B4B /* analyze_libs.rb in Resources */,
-				7ADFF8F12D316A1C00882B4B /* analyze_assets.rb in Resources */,
 				7A5281AD2D0F24A2005CAC69 /* Preview Assets.xcassets in Resources */,
 				7A5281AA2D0F24A2005CAC69 /* Assets.xcassets in Resources */,
 			);
@@ -286,21 +291,24 @@
 			files = (
 				7A3D311C2D564B0C0031C192 /* ASTDuplicateCodeManager.swift in Sources */,
 				7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */,
+				7A09380D2E0B35E400B9C37B /* Shell.swift in Sources */,
 				7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */,
 				7A5281A82D0F24A0005CAC69 /* ContentView.swift in Sources */,
-				7AA887AB2DA4484F0059A4A2 /* AST2.swift in Sources */,
-				7AA887932D8D63CD0059A4A2 /* PDGGraph2.swift in Sources */,
 				7AA887B82DA451B50059A4A2 /* PDGEdgeType.swift in Sources */,
 				7AA887B52DA44E300059A4A2 /* PDGGraph.swift in Sources */,
+				7A09380B2E0B35CE00B9C37B /* FileCache.swift in Sources */,
+				7A0938082E0B357300B9C37B /* DeadCodeAnalyzer.swift in Sources */,
 				7AA887AF2DA44C6D0059A4A2 /* PDGNode.swift in Sources */,
 				7A5281B72D0F2562005CAC69 /* HomeView.swift in Sources */,
 				7A5281A62D0F24A0005CAC69 /* AppOptimizerApp.swift in Sources */,
 				7AA887BA2DA455AD0059A4A2 /* PDGSubgraph.swift in Sources */,
 				7AA887B12DA44D280059A4A2 /* PDGBuilder.swift in Sources */,
-				7AA887A92DA4477E0059A4A2 /* ASTVisitor2.swift in Sources */,
 				7AA887B32DA44D590059A4A2 /* PDGDuplicateCodeManager.swift in Sources */,
 				7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */,
+				7A0938112E0B364500B9C37B /* LibraryAnalyzer.swift in Sources */,
 				7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */,
+				7A0938132E0B3FEA00B9C37B /* ProjectFile.swift in Sources */,
+				7A09380F2E0B362C00B9C37B /* AssetUsageAnalyzer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

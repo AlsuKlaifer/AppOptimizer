@@ -14,6 +14,7 @@ class ASTVisitor: SyntaxVisitor {
     // MARK: - Properties
     
     let ast = AST()
+
     private var currentParent: ASTNode?
     private var currentSource: String = ""
     private var sourceLocationConverter: SourceLocationConverter?
@@ -36,7 +37,9 @@ class ASTVisitor: SyntaxVisitor {
 //    override func visitPost(_ node: ClassDeclSyntax) {
 //        popNode()
 //    }
-    
+
+    // MARK: SyntaxVisitor Overrides
+
     override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
         let functionNode = ASTNode(
             type: .function,
@@ -92,7 +95,18 @@ class ASTVisitor: SyntaxVisitor {
         
         return .skipChildren
     }
+
+    // MARK: - Public Interface
     
+    func visit(source: String) {
+        self.currentSource = source
+        let sourceFile = Parser.parse(source: source)
+        self.walk(sourceFile)
+        print("Found \(functionCount) functions during visitation")
+    }
+
+    // MARK: Private methods
+
     private func pushNode(_ node: ASTNode) {
         addNodeToCurrentParent(node)
         nodeStack.append(currentParent ?? ast.root)
@@ -111,19 +125,6 @@ class ASTVisitor: SyntaxVisitor {
         }
     }
 
-    // MARK: - Public Interface
-    
-    func visit(source: String) {
-        self.currentSource = source
-        let sourceFile = Parser.parse(source: source)
-        self.walk(sourceFile)
-        print("Found \(functionCount) functions during visitation")
-    }
-    
-    // MARK: - SyntaxVisitor Overrides
-    
-    // MARK: - Private Helpers
-    
     private func safeSourceRange(for syntaxNode: SyntaxProtocol) -> Range<String.Index>? {
         guard let converter = sourceLocationConverter else { return nil }
         
