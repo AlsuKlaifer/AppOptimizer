@@ -19,22 +19,23 @@ class ASTVisitor: SyntaxVisitor {
     private var sourceLocationConverter: SourceLocationConverter?
     private var variableNormalizationMap = [String: String]()
     private var currentVariableIndex = 0
+    private var currentFunction: ASTNode?
     private var functionCount = 0
     private var nodeStack = [ASTNode]()
         
-    override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
-        let classNode = ASTNode(
-            type: .class1,
-            value: node.name.text,
-            sourceCode: node.description.trimmingCharacters(in: .whitespacesAndNewlines)
-        )
-        pushNode(classNode)
-        return .visitChildren
-    }
-    
-    override func visitPost(_ node: ClassDeclSyntax) {
-        popNode()
-    }
+//    override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
+//        let classNode = ASTNode(
+//            type: .class1,
+//            value: node.name.text,
+//            sourceCode: node.description.trimmingCharacters(in: .whitespacesAndNewlines)
+//        )
+//        pushNode(classNode)
+//        return .visitChildren
+//    }
+//    
+//    override func visitPost(_ node: ClassDeclSyntax) {
+//        popNode()
+//    }
     
     override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
         let functionNode = ASTNode(
@@ -42,16 +43,28 @@ class ASTVisitor: SyntaxVisitor {
             value: node.identifier.text,
             sourceCode: node.description.trimmingCharacters(in: .whitespacesAndNewlines)
         )
-        pushNode(functionNode)
+        
+        // Добавляем функцию в текущий контекст
+        if let parent = nodeStack.last {
+            parent.addChild(functionNode)
+        } else {
+            ast.root.addChild(functionNode)
+        }
+        
+        // Сохраняем текущую функцию и добавляем в стек
+        currentFunction = functionNode
+        nodeStack.append(functionNode)
+        
         return .visitChildren
     }
     
     override func visitPost(_ node: FunctionDeclSyntax) {
-        popNode()
+        nodeStack.removeLast()
+        currentFunction = nodeStack.last
     }
     
     override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
-        guard currentParent != nil else { return .skipChildren }
+        guard let currentFunction = currentFunction else { return .skipChildren }
         
         for binding in node.bindings {
             if let identifier = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text {
@@ -61,9 +74,22 @@ class ASTVisitor: SyntaxVisitor {
                     sourceCode: node.description.trimmingCharacters(in: .whitespacesAndNewlines),
                     variableType: binding.typeAnnotation?.type.description
                 )
-                addNodeToCurrentParent(variableNode)
+                currentFunction.addChild(variableNode)
             }
         }
+        return .skipChildren
+    }
+
+    override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+        guard let currentFunction = currentFunction else { return .skipChildren }
+        
+        let callNode = ASTNode(
+            type: .functionCall,
+            value: node.calledExpression.description.trimmingCharacters(in: .whitespacesAndNewlines),
+            sourceCode: node.description.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+        currentFunction.addChild(callNode)
+        
         return .skipChildren
     }
     
@@ -118,15 +144,6 @@ class ASTVisitor: SyntaxVisitor {
         print("Range: \(startOffset)...\(endOffset) for \(type(of: syntaxNode))")
         return startIndex..<endIndex
     }
-    
-//    private func addNodeToHierarchy(_ node: ASTNode) {
-//        if let parent = currentParent {
-//            parent.addChild(node)
-//        } else {
-//            ast.root.addChild(node)
-//        }
-//        currentParent = node
-//    }
     
     private func normalizeVariableName(_ original: String) -> String {
         if let normalized = variableNormalizationMap[original] {

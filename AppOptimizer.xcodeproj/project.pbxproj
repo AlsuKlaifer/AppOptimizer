@@ -24,7 +24,6 @@
 		7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878D2D8D61850059A4A2 /* AST.swift */; };
 		7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */; };
 		7AA887932D8D63CD0059A4A2 /* PDGGraph2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887922D8D63CC0059A4A2 /* PDGGraph2.swift */; };
-		7AA887972D8D683D0059A4A2 /* PDGDuplicateCodeManager2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager2.swift */; };
 		7AA8879A2D8D6B440059A4A2 /* SwiftGraph in Frameworks */ = {isa = PBXBuildFile; productRef = 7AA887992D8D6B440059A4A2 /* SwiftGraph */; };
 		7AA887A92DA4477E0059A4A2 /* ASTVisitor2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887A82DA4477E0059A4A2 /* ASTVisitor2.swift */; };
 		7AA887AB2DA4484F0059A4A2 /* AST2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA887AA2DA4484F0059A4A2 /* AST2.swift */; };
@@ -53,7 +52,6 @@
 		7AA8878D2D8D61850059A4A2 /* AST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AST.swift; sourceTree = "<group>"; };
 		7AA8878F2D8D61A00059A4A2 /* ASTNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTNode.swift; sourceTree = "<group>"; };
 		7AA887922D8D63CC0059A4A2 /* PDGGraph2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGGraph2.swift; sourceTree = "<group>"; };
-		7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGDuplicateCodeManager2.swift; sourceTree = "<group>"; };
 		7AA887A82DA4477E0059A4A2 /* ASTVisitor2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTVisitor2.swift; sourceTree = "<group>"; };
 		7AA887AA2DA4484F0059A4A2 /* AST2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AST2.swift; sourceTree = "<group>"; };
 		7AA887AE2DA44C6D0059A4A2 /* PDGNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGNode.swift; sourceTree = "<group>"; };
@@ -93,7 +91,6 @@
 		7A3D311A2D564AFC0031C192 /* Duplicate */ = {
 			isa = PBXGroup;
 			children = (
-				7AA887962D8D68370059A4A2 /* PDGDuplicateCodeManager2.swift */,
 				7AA887B02DA44D270059A4A2 /* PDGBuilder.swift */,
 			);
 			path = Duplicate;
@@ -303,7 +300,6 @@
 				7AA887A92DA4477E0059A4A2 /* ASTVisitor2.swift in Sources */,
 				7AA887B32DA44D590059A4A2 /* PDGDuplicateCodeManager.swift in Sources */,
 				7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */,
-				7AA887972D8D683D0059A4A2 /* PDGDuplicateCodeManager2.swift in Sources */,
 				7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -44,7 +44,7 @@ struct HomeView: View {
                 VStack {
                     Toggle("Retain Public API", isOn: $retainPublic)
                     Toggle("Include Assets", isOn: $includeAssets)
-                    Toggle("Include Libs", isOn: $includeLibraries)
+//                    Toggle("Include Libs", isOn: $includeLibraries)
                     Button("Search unused code") {
                         runDeadCodeAnalysis()
                     }
@@ -118,7 +118,7 @@ struct HomeView: View {
 
     /// Поиск дубликатов с использованием PDG
     func runDuplicateCodeAnalysis1() {
-        let source = """
+        let source1 = """
         class FirstViewController: UIViewController {
 
             let round = UIView()
@@ -131,7 +131,7 @@ struct HomeView: View {
 
                 setupSquare()
             }
-
+            
             private func setupSquare() {
                 square.backgroundColor = .blue
                 square.translatesAutoresizingMaskIntoConstraints = false
@@ -187,64 +187,71 @@ struct HomeView: View {
             }
         }
         """
-//        let source = """
-//        class Test {
-//            // Вариант 1
-//            func add1(a: Int, b: Int) -> Int { return a + b }
-//            
-//            // Вариант 2 (клон с другими именами)
-//            func add2(x: Int, y: Int) -> Int { return x + y }
-//            
-//            // Вариант 3 (почти клон с дополнительной переменной)
-//            func sum(a: Int, b: Int) -> Int {
-//                let res = a + b
-//                return res
-//            }
-//            
-//            // Вариант 4 (другая логика)
-//            func mult(a: Int, b: Int) -> Int { return a * b }
-//        }
-//        """
+
+        let source = """
+        class Test {
+            func setupView1() {
+                let view1 = UIView()
+                view1.backgroundColor = .red
+                addSubview(view1)
+            }
+            
+            func setupView2() {
+                let view2 = UIView()
+                view2.backgroundColor = .blue // не добавляется в граф!! добавить тип узла присвоение
+                view2.doSmth()
+                addSubview(view2)
+            }
+            
+            func doSomethingElse() {
+                let stack = UIStackView()
+                stack.axis = .center
+                stack.doSmth()
+            }
+        }
+        """
 
         let visitor = ASTVisitor(viewMode: .sourceAccurate)
-        visitor.visit(source: source)
+        let sourceFile = Parser.parse(source: source)
+        visitor.walk(sourceFile)
 
         let builder = PDGBuilder(ast: visitor.ast)
         builder.build()
 
         let subgraphs = builder.extractNormalizedSubgraphs()
 
-        print("\n=== Similarity Matrix ===")
-        for i in 0..<subgraphs.count {
-            let nameI = subgraphs[i].nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
-            for j in (i+1)..<subgraphs.count {
-                let nameJ = subgraphs[j].nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
-                let sim = subgraphs[i].similarity(to: subgraphs[j])
-                print("\(nameI) vs \(nameJ): \(String(format: "%.2f", sim))")
+        let clones = findSemanticClones(subgraphs: subgraphs)
+        print("\n=== Correct Semantic Clones ===")
+        for (name1, name2, similarity) in clones {
+            print("\(name1) ~ \(name2): \(String(format: "%.2f", similarity)) similarity")
+        }
+
+        // Дополнительная диагностика
+        print("\n=== Structure Analysis ===")
+        for sg in subgraphs.filter({ $0.nodes.contains { $0.astNode.type == .function } }) {
+            let name = sg.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
+            print("\nFunction: \(name)")
+            print("Operations: \(sg.normalizedOperations())")
+            print("Structure: \(sg.normalizedStructureSignature())")
+        }
+
+        func findSemanticClones(subgraphs: [PDGSubgraph]) -> [(String, String, Double)] {
+            var results = [(String, String, Double)]()
+            let functionSubgraphs = subgraphs.filter { sg in
+                sg.nodes.contains { $0.astNode.type == .function }
             }
-        }
-
-        let clones = findClones(subgraphs: subgraphs, threshold: 0.7)
-        print("\n=== Detected Clones (threshold: 0.7) ===")
-        for (g1, g2, sim) in clones {
-            let name1 = g1.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
-            let name2 = g2.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
-            print("\(name1) ~ \(name2): \(String(format: "%.2f", sim)) similarity")
-        }
-
-        func findClones(subgraphs: [PDGSubgraph], threshold: Double = 0.85) -> [(PDGSubgraph, PDGSubgraph, Double)] {
-            var results = [(PDGSubgraph, PDGSubgraph, Double)]()
-            var processed = Set<Int>()
             
-            for i in 0..<subgraphs.count {
-                guard !processed.contains(i) else { continue }
-                var currentGroup = [subgraphs[i]]
-                
-                for j in (i+1)..<subgraphs.count {
-                    let similarity = subgraphs[i].similarity(to: subgraphs[j])
-                    if similarity >= threshold {
-                        results.append((subgraphs[i], subgraphs[j], similarity))
-                        processed.insert(j)
+            for i in 0..<functionSubgraphs.count {
+                for j in (i+1)..<functionSubgraphs.count {
+                    let g1 = functionSubgraphs[i]
+                    let g2 = functionSubgraphs[j]
+                    
+                    let similarity = g1.semanticSimilarity(to: g2)
+                    print(similarity)
+                    if similarity >= 0.3 { // такое маленькое потому что надо исправить Сравнение операций внутри функций
+                        let name1 = g1.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
+                        let name2 = g2.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
+                        results.append((name1, name2, similarity))
                     }
                 }
             }

@@ -130,34 +130,6 @@ extension PDGSubgraph {
 }
 
 extension PDGSubgraph {
-    func isSemanticClone(of other: PDGSubgraph) -> Bool {
-        // Нормализуем узлы (игнорируем имена переменных)
-        let normalizeNode = { (node: PDGNode) -> String in
-            if node.astNode.type == .variable {
-                return "var[\(node.astNode.variableType ?? "")]"
-            }
-            return "\(node.astNode.type)"
-        }
-        
-        // Сравниваем структуру графов
-        let selfNodes = self.nodes.map(normalizeNode).sorted()
-        let otherNodes = other.nodes.map(normalizeNode).sorted()
-        
-        guard selfNodes == otherNodes else { return false }
-        
-        // Сравниваем рёбра
-        let normalizeEdge = { (edge: (from: PDGNode, to: PDGNode, type: PDGEdgeType)) -> String in
-            return "\(normalizeNode(edge.from))-\(edge.type)->\(normalizeNode(edge.to))"
-        }
-        
-        let selfEdges = self.edges.map(normalizeEdge).sorted()
-        let otherEdges = other.edges.map(normalizeEdge).sorted()
-        
-        return selfEdges == otherEdges
-    }
-}
-
-extension PDGSubgraph {
     func similarity(to other: PDGSubgraph) -> Double {
         // Нормализация узлов
         let selfNodes = self.normalizedNodes()
@@ -195,11 +167,124 @@ extension PDGSubgraph {
             "\($0.from.astNode.type)->\($0.type)->\($0.to.astNode.type)"
         })
     }
-    
+
     private func jaccardSimilarity<T: Hashable>(_ a: Set<T>, _ b: Set<T>) -> Double {
+        // поправить для операции внутри функций (досттаь соурс код и найти меру жаккарда)
+        // мб использовать расстояние левенштейна или https://habr.com/ru/companies/skillfactory/articles/566414/
         let intersection = a.intersection(b).count
         let union = a.union(b).count
         return union > 0 ? Double(intersection) / Double(union) : 0
     }
 }
 
+extension PDGSubgraph {
+    private func normalizedNodeSignature(_ node: PDGNode) -> String {
+        switch node.astNode.type {
+        case .variable:
+            return "VAR[\(node.astNode.variableType ?? "?")]"
+        case .functionCall:
+            return "CALL[\(node.astNode.value)]"
+        case .function:
+            return "FUNC[params:\(node.astNode.children.filter { $0.type == .variable }.count)]"
+        default:
+            return node.astNode.type.rawValue
+        }
+    }
+    
+    private func normalizedEdgeSignature(_ edge: (from: PDGNode, to: PDGNode, type: PDGEdgeType)) -> String {
+        return "\(normalizedNodeSignature(edge.from))-\(edge.type)->\(normalizedNodeSignature(edge.to))"
+    }
+}
+
+extension PDGSubgraph {
+    func semanticSimilarity(to other: PDGSubgraph) -> Double {
+        // 1. Фильтруем только узлы функций
+        let selfFuncNodes = self.nodes.filter { $0.astNode.type == .function }
+        let otherFuncNodes = other.nodes.filter { $0.astNode.type == .function }
+        
+        guard !selfFuncNodes.isEmpty && !otherFuncNodes.isEmpty else {
+            return 0.0
+        }
+        
+        // 2. Сравниваем только внутреннюю структуру функций
+        let selfStructure = self.normalizedStructureSignature()
+        let otherStructure = other.normalizedStructureSignature()
+        let structureScore = jaccardSimilarity(selfStructure, otherStructure)
+        
+        // 3. Сравниваем операции внутри функций
+        let selfOps = self.normalizedOperations()
+        let otherOps = other.normalizedOperations()
+        let opsScore = jaccardSimilarity(selfOps, otherOps) // ИСПРАВИТь
+        
+        // 4. Комбинируем оценки с приоритетом операций
+        return (opsScore * 0.5 + structureScore * 0.5)
+    }
+    
+    func normalizedStructureSignature() -> Set<String> {
+        var signatures = Set<String>()
+        
+        // Анализируем только узлы внутри функции (игнорируем внешние)
+        let internalNodes = nodes.filter { node in
+            guard let parent = node.astNode.parent else { return false }
+            return parent.type == .function
+        }
+        
+        for node in internalNodes {
+            signatures.insert("NODE:\(node.astNode.type)-\(node.astNode.variableType ?? "")")
+        }
+        
+        for edge in edges {
+            // Учитываем только ребра между внутренними узлами
+            if internalNodes.contains(edge.from) && internalNodes.contains(edge.to) {
+                signatures.insert("EDGE:\(edge.from.astNode.type)-\(edge.type)-\(edge.to.astNode.type)")
+            }
+        }
+        
+        return signatures
+    }
+}
+
+extension PDGSubgraph {
+    func isSemanticClone(of other: PDGSubgraph) -> Bool {
+        // 1. Нормализация операций
+        let selfOps = self.normalizedOperations()
+        let otherOps = other.normalizedOperations()
+        
+        // 2. Сравнение структуры вызовов
+        let selfCalls = self.functionCallsPattern()
+        let otherCalls = other.functionCallsPattern()
+        
+        // 3. Сравнение структуры переменных
+        let selfVars = self.variablesPattern()
+        let otherVars = other.variablesPattern()
+
+        return selfOps == otherOps &&
+               selfCalls == otherCalls &&
+               selfVars == otherVars
+    }
+    
+    func normalizedOperations() -> Set<String> {
+        let array = nodes
+            .filter { $0.astNode.type != .variable && $0.astNode.type != .functionCall }
+            .map {
+                $0.astNode.sourceCode ?? ""
+                    .replacingOccurrences(of: "\\b[a-zA-Z_]\\w*\\b", with: "", options: .regularExpression)
+                    .replacingOccurrences(of: "\\d+", with: "0")
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            .filter { !$0.isEmpty }
+        return Set(array)
+    }
+    
+    private func functionCallsPattern() -> [String] {
+        return nodes
+            .filter { $0.astNode.type == .functionCall }
+            .map { _ in "CALL" } // Нормализуем все вызовы
+    }
+    
+    private func variablesPattern() -> [String] {
+        return nodes
+            .filter { $0.astNode.type == .variable }
+            .map { $0.astNode.variableType ?? "VAR" }
+    }
+}

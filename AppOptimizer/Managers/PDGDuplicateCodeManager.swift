@@ -116,6 +116,29 @@ class PDGDuplicateCodeManager {
         return results.sorted { $0.2 > $1.2 }
     }
 
+    func findSemanticClones(subgraphs: [PDGSubgraph]) -> [(String, String, Double)] {
+        var results = [(String, String, Double)]()
+        let functionSubgraphs = subgraphs.filter { sg in
+            sg.nodes.contains { $0.astNode.type == .function }
+        }
+        
+        for i in 0..<functionSubgraphs.count {
+            for j in (i+1)..<functionSubgraphs.count {
+                let g1 = functionSubgraphs[i]
+                let g2 = functionSubgraphs[j]
+                
+                let similarity = g1.semanticSimilarity(to: g2)
+                if similarity >= 0.85 {
+                    let name1 = g1.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
+                    let name2 = g2.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
+                    results.append((name1, name2, similarity))
+                }
+            }
+        }
+        
+        return results.sorted { $0.2 > $1.2 }
+    }
+
     private func compareFiles(_ file1: URL, _ file2: URL, builders: [URL: PDGBuilder]) -> CodeClone? {
         guard let builder1 = builders[file1], let builder2 = builders[file2] else { return nil }
         
@@ -148,7 +171,6 @@ class PDGDuplicateCodeManager {
     }
     
     private func calculateSimilarity(_ sg1: PDGSubgraph, _ sg2: PDGSubgraph) -> Double {
-        // Более точный расчет схожести с учетом размера подграфа
         let commonNodes = Set(sg1.nodes.map { $0.id }).intersection(sg2.nodes.map { $0.id }).count
         let totalNodes = max(sg1.nodes.count, sg2.nodes.count)
         return Double(commonNodes) / Double(totalNodes)

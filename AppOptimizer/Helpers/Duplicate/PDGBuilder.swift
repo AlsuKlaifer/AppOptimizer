@@ -18,13 +18,62 @@ class PDGBuilder {
     }
     
     func build() {
-        // 1. Строим все узлы PDG
-        buildAllNodes()
+        buildNodes()
+        buildControlDependencies()
+        buildDataDependencies()
+    }
+
+    private func buildNodes() {
+        func traverse(astNode: ASTNode) {
+            let pdgNode = PDGNode(astNode: astNode)
+            nodes.append(pdgNode)
+            
+            for child in astNode.children {
+                traverse(astNode: child)
+            }
+        }
         
-        // 2. Строим зависимости
-        buildAllDependencies()
+        traverse(astNode: ast.root)
     }
     
+    private func buildControlDependencies() {
+        let functionNodes = nodes.filter { $0.astNode.type == .function }
+        
+        for functionNode in functionNodes {
+            // Все дочерние узлы функции зависят от неё
+            let bodyNodes = nodes.filter { $0.astNode.parent == functionNode.astNode }
+            
+            for bodyNode in bodyNodes {
+                edges.append((functionNode, bodyNode, .control))
+            }
+            
+            // Последовательные зависимости между операциями
+            let orderedBodyNodes = bodyNodes.sorted {
+                $0.astNode.sourceCode! < $1.astNode.sourceCode!
+            }
+            
+            for i in 0..<orderedBodyNodes.count-1 {
+                edges.append((orderedBodyNodes[i], orderedBodyNodes[i+1], .sequential))
+            }
+        }
+    }
+    
+    private func buildDataDependencies() {
+        let variableNodes = nodes.filter { $0.astNode.type == .variable }
+        
+        for variableNode in variableNodes {
+            // Ищем узлы, которые используют эту переменную
+            let usingNodes = nodes.filter { node in
+                node != variableNode &&
+                node.astNode.sourceCode!.contains(variableNode.astNode.value)
+            }
+            
+            for userNode in usingNodes {
+                edges.append((variableNode, userNode, .data))
+            }
+        }
+    }
+
     private func buildAllNodes() {
         func traverse(astNode: ASTNode) {
             let pdgNode = PDGNode(astNode: astNode)
@@ -54,40 +103,7 @@ class PDGBuilder {
         // 3. Sequential dependencies (порядок выполнения)
         buildSequentialDependencies()
     }
-    
-    private func buildDataDependencies() {
-        let variableNodes = nodes.filter { $0.astNode.type == .variable }
-        
-        for varNode in variableNodes {
-            // Ищем все узлы, которые используют эту переменную
-            let usingNodes = nodes.filter { node in
-                guard node != varNode else { return false }
-                return node.astNode.sourceCode!.contains(varNode.astNode.value)
-            }
-            
-            for userNode in usingNodes {
-                edges.append((varNode, userNode, .data))
-            }
-        }
-    }
-    
-//    private func buildSequentialDependencies() {
-//        // Группируем узлы по функциям
-//        let functionNodes = nodes.filter { $0.astNode.type == .function }
-//        
-//        for functionNode in functionNodes {
-//            let functionBody = nodes
-//                .filter { $0.astNode.parent == functionNode.astNode }
-//                .sorted { $0.astNode.sourceCode! < $1.astNode.sourceCode! }
-//            
-//            // Связываем узлы последовательно
-//            if functionBody.count > 0 {
-//                for i in 0..<functionBody.count-1 {
-//                    edges.append((functionBody[i], functionBody[i+1], .control))
-//                }
-//            }
-//        }
-//    }
+
     private func buildSequentialDependencies() {
         let functionNodes = nodes.filter { $0.astNode.type == .function }
         
@@ -183,8 +199,6 @@ extension PDGBuilder {
         
         for edge in edges {
             adjacencyList[edge.from, default: []].append((edge.to, edge.type))
-            // Для неориентированного графа (если нужно):
-            // adjacencyList[edge.to, default: []].append((edge.from, edge.type))
         }
         
         return adjacencyList
@@ -225,9 +239,7 @@ extension PDGBuilder {
     private func normalizeSubgraph(nodes: Set<PDGNode>,
                                  edges: [(from: PDGNode, to: PDGNode, type: PDGEdgeType)])
     -> PDGSubgraph {
-        // 1. Нормализация переменных
         var normalizedNodes = nodes.map { node in
-            // Создаем копию узла с нормализованными именами переменных
             if node.astNode.type == .variable {
                 let normalizedValue = "var_" + String(node.astNode.value.hashValue)
                 let normalizedNode = PDGNode(
@@ -243,8 +255,7 @@ extension PDGBuilder {
             }
             return node
         }
-        
-        // 2. Нормализация ребер
+
         let normalizedEdges = edges.map { edge in
             let fromNode = normalizedNodes.first { $0.astNode.value == edge.from.astNode.value } ?? edge.from
             let toNode = normalizedNodes.first { $0.astNode.value == edge.to.astNode.value } ?? edge.to
@@ -258,7 +269,6 @@ extension PDGBuilder {
     }
 
     func extractFunctionNodes() -> [PDGNode] {
-        // ВАЖНО: Проверяем правильность фильтрации
         let functions = nodes.filter { node in
             let isFunction = node.astNode.type == .function
             print("Node \(node.astNode.value) is function: \(isFunction)")
@@ -270,6 +280,3 @@ extension PDGBuilder {
         return functions
     }
 }
-
-// возможно нужно поменять реализацию аст дерева и не нормализовывать его
-// попробовать в дипсик
