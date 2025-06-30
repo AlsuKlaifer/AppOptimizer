@@ -40,7 +40,7 @@ class PDGBuilder {
         let functionNodes = nodes.filter { $0.astNode.type == .function }
         
         for functionNode in functionNodes {
-            // Все дочерние узлы функции зависят от неё
+            // все дочерние узлы функции зависят от нее
             let bodyNodes = nodes.filter { $0.astNode.parent == functionNode.astNode }
             
             for bodyNode in bodyNodes {
@@ -51,9 +51,11 @@ class PDGBuilder {
             let orderedBodyNodes = bodyNodes.sorted {
                 $0.astNode.sourceCode! < $1.astNode.sourceCode!
             }
-            
-            for i in 0..<orderedBodyNodes.count-1 {
-                edges.append((orderedBodyNodes[i], orderedBodyNodes[i+1], .sequential))
+
+            if orderedBodyNodes.count > 0 {
+                for i in 0..<orderedBodyNodes.count-1 {
+                    edges.append((orderedBodyNodes[i], orderedBodyNodes[i+1], .sequential))
+                }
             }
         }
     }
@@ -62,7 +64,7 @@ class PDGBuilder {
         let variableNodes = nodes.filter { $0.astNode.type == .variable }
         
         for variableNode in variableNodes {
-            // Ищем узлы, которые используют эту переменную
+            // ищем узлы, которые используют эту переменную
             let usingNodes = nodes.filter { node in
                 node != variableNode &&
                 node.astNode.sourceCode!.contains(variableNode.astNode.value)
@@ -89,7 +91,7 @@ class PDGBuilder {
     }
     
     private func buildAllDependencies() {
-        // 1. Control dependencies (по родительской иерархии)
+        // Control dependencies (по родительской иерархии)
         for node in nodes {
             if let parent = node.astNode.parent,
                let parentPDGNode = nodeMap[parent] {
@@ -97,10 +99,10 @@ class PDGBuilder {
             }
         }
         
-        // 2. Data dependencies (использование переменных)
+        // Data dependencies (использование переменных)
         buildDataDependencies()
         
-        // 3. Sequential dependencies (порядок выполнения)
+        // Sequential dependencies (порядок выполнения)
         buildSequentialDependencies()
     }
 
@@ -108,7 +110,7 @@ class PDGBuilder {
         let functionNodes = nodes.filter { $0.astNode.type == .function }
         
         for functionNode in functionNodes {
-            // Находим все узлы, принадлежащие этой функции (включая вложенные)
+            // находим все узлы, принадлежащие этой функции (включая вложенные)
             var functionBody = nodes.filter { node in
                 var current: ASTNode? = node.astNode
                 while let parent = current?.parent {
@@ -120,10 +122,10 @@ class PDGBuilder {
                 return false
             }
             
-            // Добавляем саму функцию в начало
+            // добавляем саму функцию в начало
             functionBody.insert(functionNode, at: 0)
             
-            // Сортируем узлы по позиции в исходном коде
+            // сортируем узлы по позиции в исходном коде
             functionBody.sort { a, b in
                 guard let rangeA = a.astNode.sourceRange,
                       let rangeB = b.astNode.sourceRange else {
@@ -132,7 +134,7 @@ class PDGBuilder {
                 return rangeA.lowerBound < rangeB.lowerBound
             }
             
-            // Строим последовательные зависимости
+            // строим последовательные зависимости
             for i in 0..<functionBody.count-1 {
                 edges.append((functionBody[i], functionBody[i+1], .sequential))
             }
@@ -146,17 +148,13 @@ extension PDGBuilder {
         let functionNodes = nodes.filter { $0.astNode.type == .function }
         
         for functionNode in functionNodes {
-            // Находим все узлы, связанные с функцией
+            // находим все узлы, связанные с функцией
             var relatedNodes = nodes.filter { node in
-                // Включаем саму функцию
                 if node == functionNode { return true }
-                
-                // Ищем узлы, которые либо:
-                // 1. Являются дочерними к функции
-                // 2. Имеют зависимости от/к функции
+
                 var isRelated = false
                 
-                // Проверяем parent-child связь
+                // проверяем parent-child связь
                 var current: ASTNode? = node.astNode
                 while let parent = current?.parent {
                     if parent == functionNode.astNode {
@@ -166,7 +164,7 @@ extension PDGBuilder {
                     current = parent
                 }
                 
-                // Проверяем зависимости
+                // проверяем зависимости
                 if !isRelated {
                     isRelated = edges.contains { $0.from == functionNode && $0.to == node } ||
                                edges.contains { $0.from == node && $0.to == functionNode }
@@ -175,15 +173,14 @@ extension PDGBuilder {
                 return isRelated
             }
             
-            // Находим все рёбра между этими узлами
+            // находим все рёбра между этими узлами
             let relatedEdges = edges.filter { edge in
                 relatedNodes.contains(edge.from) && relatedNodes.contains(edge.to)
             }
-            
-            // Создаём подграф, даже если в нём только сама функция
+
             let subgraph = PDGSubgraph(
                 nodes: relatedNodes,
-                edges: relatedEdges
+                edges: relatedEdges.map({ PDGEdgeCodable(from: $0.from, to: $0.to, type: $0.type)})
             )
             
             subgraphs.append(subgraph)
@@ -216,17 +213,17 @@ extension PDGBuilder {
         while !queue.isEmpty {
             let (current, level) = queue.removeFirst()
             
-            // Проверяем глубину и посещенные узлы
+            // проверяем глубину и посещенные узлы
             guard level <= depth, !visited.contains(current.id) else { continue }
             
             visited.insert(current.id)
             sgNodes.insert(current)
             
-            // Добавляем соседей в очередь
+            // добавляем соседей в очередь
             for (neighbor, edgeType) in adjacencyList[current, default: []] {
                 sgEdges.append((from: current, to: neighbor, type: edgeType))
                 
-                // Не добавляем в очередь если достигли максимальной глубины
+                // не добавляем в очередь, если достигли максимальной глубины
                 if level < depth {
                     queue.append((neighbor, level + 1))
                 }
@@ -239,7 +236,7 @@ extension PDGBuilder {
     private func normalizeSubgraph(nodes: Set<PDGNode>,
                                  edges: [(from: PDGNode, to: PDGNode, type: PDGEdgeType)])
     -> PDGSubgraph {
-        var normalizedNodes = nodes.map { node in
+        let normalizedNodes = nodes.map { node in
             if node.astNode.type == .variable {
                 let normalizedValue = "var_" + String(node.astNode.value.hashValue)
                 let normalizedNode = PDGNode(
@@ -264,7 +261,7 @@ extension PDGBuilder {
         
         return PDGSubgraph(
             nodes: normalizedNodes,
-            edges: normalizedEdges
+            edges: normalizedEdges.map({ PDGEdgeCodable(from: $0.from, to: $0.to, type: $0.type)})
         )
     }
 

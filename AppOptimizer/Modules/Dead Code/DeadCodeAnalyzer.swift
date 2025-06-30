@@ -2,7 +2,7 @@
 //  DeadCodeAnalyzer.swift
 //  AppOptimizer
 //
-//  Created by Alsu Faizova on 24.06.2025.
+//  Created by Alsu Faizova on 09.06.2025.
 //
 
 import Foundation
@@ -32,14 +32,21 @@ final class DeadCodeAnalyzer {
             return "Error: Periphery not found"
         }
 
-        let outputFile = "\(appPath)/unused_dead_code.txt"
-
+        let outputFile = "\(appPath)/unused_code.txt"
         let cache = FileCache(path: appPath)
-        guard cache.shouldAnalyze(files: projectFile.allFiles) else {
+
+        let allFilesToTrack = projectFile.workspaceFiles + collectSourceFiles()
+        guard cache.shouldAnalyze(files: allFilesToTrack) else {
             return (try? String(contentsOfFile: outputFile, encoding: .utf8)) ?? ""
         }
 
-        let command = buildPeripheryCommand(periphery: peripheryPath, project: projectFile)
+        let changedFiles = cache.changedFiles
+
+        let command = buildPeripheryCommand(
+            periphery: peripheryPath,
+            project: projectFile,
+            changedFiles: changedFiles
+        )
 
         let output = Shell.run(command: command)
 
@@ -57,6 +64,27 @@ final class DeadCodeAnalyzer {
     }
 
     // MARK: Private methods
+
+    private func collectSourceFiles() -> [String] {
+        let fileManager = FileManager.default
+        var sourceFiles: [String] = []
+
+        let allowedExtensions = ["swift", "xib", "storyboard"]
+
+        guard let enumerator = fileManager.enumerator(atPath: appPath) else {
+            return []
+        }
+
+        for case let path as String in enumerator {
+            let ext = (path as NSString).pathExtension.lowercased()
+            if allowedExtensions.contains(ext) {
+                let fullPath = (appPath as NSString).appendingPathComponent(path)
+                sourceFiles.append(fullPath)
+            }
+        }
+
+        return sourceFiles
+    }
 
     private func findProjectFile() -> ProjectFile? {
         let fm = FileManager.default
@@ -77,14 +105,36 @@ final class DeadCodeAnalyzer {
         return FileManager.default.fileExists(atPath: path) ? path : nil
     }
 
-    private func buildPeripheryCommand(periphery: String, project: ProjectFile) -> String {
-        var command = "\(periphery) scan"
-        command += project.isWorkspace ? " --workspace \"\(project.path)\"" : " --project \"\(project.path)\""
-        command += " --schemes \"\(project.defaultScheme)\""
-        command += " --targets \"\(project.defaultTarget)\""
-        if retainPublic {
-            command += " --retain-public"
+    private func buildPeripheryCommand(
+        periphery: String,
+        project: ProjectFile,
+        changedFiles: [String]
+    ) -> String {
+        var command = [periphery, "scan"]
+
+        command += ["--index-exclude", "\"\(appPath)/Pods/**\""]
+
+        if project.isWorkspace {
+            command += ["--workspace", "\"\(project.path)\""]
+        } else {
+            command += ["--project", "\"\(project.path)\""]
         }
-        return command
+
+        command += ["--schemes", "\"\(project.defaultScheme)\""]
+
+        if retainPublic {
+            command.append("--retain-public")
+        }
+
+//        if !changedFiles.isEmpty {
+//            let includes = changedFiles
+//                .map { "\"\($0)\"" }
+//                .joined(separator: ",")
+//            command += ["--report-exclude", includes]
+//        } временно
+
+        command += ["--disable-update-check"]
+
+        return command.joined(separator: " ")
     }
 }

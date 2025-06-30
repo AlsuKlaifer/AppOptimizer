@@ -2,7 +2,7 @@
 //  AssetUsageAnalyzer.swift
 //  AppOptimizer
 //
-//  Created by Alsu Faizova on 24.06.2025.
+//  Created by Alsu Faizova on 09.06.2025.
 //
 
 import Foundation

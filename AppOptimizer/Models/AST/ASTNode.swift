@@ -5,14 +5,26 @@
 //  Created by Alsu Faizova on 21.03.2025.
 //
 
+import Foundation
+
 enum NodeType: String, Hashable, Codable {
-    case root, class1, variable, function, functionCall, value
+    case root
+    case class1
+    case variable
+    case function
+    case functionCall
+    case value
 }
 
 class ASTNode {
 
+    private enum CodingKeys: String, CodingKey {
+        case id, type, value, children, sourceCode, classType, variableType
+    }
+
     // MARK: Properties
 
+    let id: UUID
     let type: NodeType
     let value: String
     var children: [ASTNode] = []
@@ -35,6 +47,7 @@ class ASTNode {
         parent: ASTNode? = nil,
         sourceRange: Range<String.Index>? = nil
     ) {
+        self.id = UUID()
         self.type = type
         self.value = value
         self.sourceCode = sourceCode
@@ -117,6 +130,27 @@ class ASTNode {
         let lcsLength = longestCommonSubsequence(sequence1, sequence2)
         return Double(lcsLength) / Double(max(sequence1.count, sequence2.count))
     }
+
+    required convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        let id           = try container.decode(UUID.self,      forKey: .id)
+        let type         = try container.decode(NodeType.self,  forKey: .type)
+        let value        = try container.decode(String.self,    forKey: .value)
+        let children     = try container.decode([ASTNode].self, forKey: .children)
+        let sourceCode   = try container.decodeIfPresent(String.self, forKey: .sourceCode)
+        let classType    = try container.decodeIfPresent(String.self, forKey: .classType)
+        let variableType = try container.decodeIfPresent(String.self, forKey: .variableType)
+
+        // Создаем через основной инициализатор, он установит parent для детей
+        self.init(
+            type: type,
+            value: value,
+            sourceCode: sourceCode ?? "",
+            classType: classType,
+            variableType: variableType
+        )
+    }
 }
 
 extension ASTNode: Hashable {
@@ -127,5 +161,20 @@ extension ASTNode: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(type)
         hasher.combine(value)
+    }
+}
+
+extension ASTNode: Codable {
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(id,           forKey: .id)
+        try container.encode(type,         forKey: .type)
+        try container.encode(value,        forKey: .value)
+        try container.encode(children,     forKey: .children)
+        try container.encodeIfPresent(sourceCode,   forKey: .sourceCode)
+        try container.encodeIfPresent(classType,    forKey: .classType)
+        try container.encodeIfPresent(variableType, forKey: .variableType)
     }
 }

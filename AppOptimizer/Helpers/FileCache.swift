@@ -2,13 +2,15 @@
 //  FileCache.swift
 //  AppOptimizer
 //
-//  Created by Alsu Faizova on 24.06.2025.
+//  Created by Alsu Faizova on 04.06.2025.
 //
 
 import Foundation
 import CryptoKit
 
 final class FileCache {
+
+    private(set) var changedFiles: [String] = []
 
     // MARK: Private properties
 
@@ -26,15 +28,19 @@ final class FileCache {
     // MARK: Internal methods
 
     func shouldAnalyze(files: [String]) -> Bool {
+        changedFiles = []
+
         for file in files {
             guard let data = try? Data(contentsOf: URL(fileURLWithPath: file)) else { continue }
             let hash = SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
             currentHashes[file] = hash
             if storedHashes[file] != hash {
-                return true
+                changedFiles.append(file)
+                storedHashes[file] = hash
             }
         }
-        return false
+
+        return !changedFiles.isEmpty
     }
 
     func save() {

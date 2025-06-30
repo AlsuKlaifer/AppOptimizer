@@ -10,86 +10,238 @@ import SwiftParser
 import AppKit
 
 struct HomeView: View {
-    @State private var appPath: String = ""
+    @Binding var appPath: String
+    @ObservedObject var settings: SettingsModel
     @State private var outputFile: String = ""
+    @State private var results: String = ""
 
-    // тоглы для поиска неиспользуемого кода
-    @State private var retainPublic: Bool = false // все публичные и открытые объявления помечаем используемыми
-    @State private var includeAssets: Bool = false // добавить анализ неиспользуемых ассетов
-    @State private var includeLibraries: Bool = false // добавить анализ неиспользуемых библиотек
+    @State private var showClearBanner: Bool = false
+    @State private var showDeleteConfirmation = false
+    @State private var showDeleteResultsSheet = false
 
-    // тоглы для поиска дубликатов
-    @State private var onlySwift: Bool = false // сканировать только файлы с расширением swift
-    
+    @State private var isAnalyzingDeadCode = false
+    @State private var isAnalyzingDuplicates = false
+
+    // все публичные и открытые объявления помечаем используемыми
+    @State private var retainPublic: Bool = false
+    @State private var includeAssets: Bool = false
+
+    private let thresholdFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.minimum = 0
+        formatter.maximum = 1
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.numberStyle = .decimal
+        formatter.decimalSeparator = "."
+        return formatter
+    }()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Welcome to app optimizer! You can scan app for searching unused code and duplicates")
-                .padding()
-            VStack {
+        ZStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 20) {
                 HStack {
-                    Text("Project path:")
-                    TextField("Path", text: $appPath)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .frame(width: 400)
-                        .padding([.top, .bottom])
-                    Button("Choose...") {
-                        selectProjectPath()
-                    }
+                    Text("App Optimizer")
+                        .font(.largeTitle.bold())
+                        .padding(.top, 5)
                 }
-            }
-            HStack {
-                VStack {
-                    Toggle("Retain Public API", isOn: $retainPublic)
-                    Toggle("Include Assets", isOn: $includeAssets)
-//                    Toggle("Include Libs", isOn: $includeLibraries)
-                    Button("Search unused code") {
-                        runDeadCodeAnalysis()
-                    }
-                    .padding()
-                }
-                .padding()
-                VStack {
-                    Button("Search duplicates") {
-                        runDuplicateCodeAnalysis1()
-                    }
-                    .padding()
-                }
-            }
-            if !outputFile.isEmpty {
-                Text("Script Output:")
-                    .font(.headline)
-                ScrollView {
-                    Text(outputFile)
+                
+                HStack {
+                    Text("Оптимизируйте ваш iOS-проект: найдите неиспользуемый код, медиаресурсы и дублирования.")
                         .font(.body)
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.secondary)
+                    
+                    Spacer()
+                    
+                    Button(action: clearCache) {
+                        Label("Очистить кэш", systemImage: "trash")
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .frame(height: 400)
-                .border(Color.gray, width: 1)
-                .padding()
+                
+                Divider()
+                
+                GroupBox(label: Label("Путь к проекту", systemImage: "folder")) {
+                    HStack(spacing: 12) {
+                        TextField("Укажите путь к папке с проектом", text: $appPath)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        Button("Выбрать...") {
+                            selectProjectPath()
+                        }
+                    }
+                    .padding(.top, 5)
+                }
+                
+                HStack(alignment: .top, spacing: 40) {
+                    GroupBox(
+                        label: Label("Настройки анализа кода", systemImage: "trash")
+                            .padding(5)
+                    ) {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Toggle("Публичные API пометить используемыми", isOn: $retainPublic)
+                            Toggle("Анализировать медиаресурсы", isOn: $includeAssets)
+                        }
+                        .padding(5)
+                    }
+                    
+                    GroupBox(
+                        label: Label("Настройки поиска дубликатов", systemImage: "doc.on.doc")
+                            .padding(5)
+                    ) {
+                        VStack(alignment: .leading, spacing: 10) {
+//                            Toggle("Анализировать только Swift-файлы", isOn: $onlySwift)
+                            HStack(spacing: 10) {
+                                Text("Минимальный порог сходства:")
+                                TextField("0.8", value: $settings.minSimilarityThreshold, formatter: thresholdFormatter)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .frame(width: 50)
+                            }
+                        }
+                        .padding(5)
+                    }
+                }
+                
+                HStack(spacing: 40) {
+                    Button(action: {
+                        isAnalyzingDeadCode = true
+                        runDeadCodeAnalysis()
+                    }) {
+                        Label("Поиск неиспользуемого кода", systemImage: "trash")
+                            .font(.system(size: 16, weight: .semibold))
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .opacity(isAnalyzingDeadCode ? 0 : 1)
+                            .overlay(
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                    .opacity(isAnalyzingDeadCode ? 1 : 0)
+                            )
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(isAnalyzingDeadCode)
+                    
+                    Button(action: {
+                        isAnalyzingDuplicates = true
+                        runDuplicateCodeAnalysis()
+                    }) {
+                        Label("Поиск дубликатов", systemImage: "doc.on.doc")
+                            .font(.system(size: 16, weight: .semibold))
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .opacity(isAnalyzingDuplicates ? 0 : 1)
+                            .overlay(
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                    .opacity(isAnalyzingDuplicates ? 1 : 0)
+                            )
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(isAnalyzingDuplicates)
+                }
+                .padding(.top, 8)
+                
+                Divider()
+                Text("Результаты анализа")
+                    .font(.headline)
+                
+                ScrollView {
+                    TextEditor(text: $outputFile)
+                        .font(.system(.body, design: .monospaced))
+                        .padding()
+                        .frame(minHeight: 300)
+                        .background(Color(.systemGray))
+                        .cornerRadius(8)
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.4), lineWidth: 1))
+                }
+                .frame(minHeight: 320)
+                
+                HStack {
+                    Spacer()
+                    Button(action: { showDeleteConfirmation = true }) {
+                        Label("Удалить неиспользуемое", systemImage: "trash")
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 10)
+                            .font(.system(size: 14, weight: .semibold))
+                    }
+                    .buttonStyle(.bordered)
+                    .alert("Удалить все неиспользуемые элементы?", isPresented: $showDeleteConfirmation) {
+                        Button("Удалить", role: .destructive) {
+                            deleteUnused()
+                        }
+                        Button("Отмена", role: .cancel) { }
+                    } message: {
+                        Text("Это действие нельзя будет отменить")
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding()
+            .frame(minWidth: 820, minHeight: 640)
+            
+            if showClearBanner {
+                Text("Кэш успешно очищен")
+                    .padding()
+                    .background(Color.green.opacity(0.8))
+                    .cornerRadius(8)
+                    .foregroundColor(.white)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .padding(.top, 10)
             }
         }
         .padding()
+        .frame(minWidth: 820, minHeight: 640)
+        // модальный скрин с результатами
+        .sheet(isPresented: $showDeleteResultsSheet) {
+            DeleteResultsSheet(output: results) {
+                showDeleteResultsSheet = false
+            }
+        }
+    }
+
+    private func clearCache() {
+        guard !appPath.isEmpty else {
+            outputFile = "Укажите путь к проекту"
+            return
+        }
+        let projectURL = URL(fileURLWithPath: appPath)
+        let cacheURL = projectURL.appendingPathComponent(".file_hashes_cache")
+        if FileManager.default.fileExists(atPath: cacheURL.path) {
+            try? FileManager.default.removeItem(at: cacheURL)
+        }
+
+        withAnimation { showClearBanner = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            withAnimation {
+                showClearBanner = false
+            }
+        }
+    }
+
+    private func deleteUnused() {
+        let removeManager = RemoveManager(appPath: appPath)
+        results = removeManager.removeUnused(outputFile: outputFile)
+        showDeleteResultsSheet = true
     }
 
     private func runDeadCodeAnalysis() {
-        let deadCodeManager = DeadCodeManager(
-            appPath: appPath,
-            retainPublic: retainPublic,
-            includeAssets: includeAssets,
-            includeLibraries: includeLibraries
-        )
+        DispatchQueue.global(qos: .userInitiated).async {
+            let deadCodeManager = DeadCodeManager(
+                appPath: appPath,
+                retainPublic: retainPublic,
+                includeAssets: includeAssets
+            )
+            deadCodeManager.analyze(outputFile: &outputFile)
 
-        deadCodeManager.analyze(outputFile: &outputFile)
+            DispatchQueue.main.async {
+                isAnalyzingDeadCode = false
+            }
+        }
     }
     
-    /// Открывает NSOpenPanel для выбора пути к проекту
+    /// NSOpenPanel для выбора пути к проекту
     func selectProjectPath() {
         let openPanel = NSOpenPanel()
-        openPanel.title = "Select Project Directory"
         openPanel.canChooseFiles = false
         openPanel.canChooseDirectories = true
         openPanel.allowsMultipleSelection = false
@@ -117,164 +269,24 @@ struct HomeView: View {
     }
 
     /// Поиск дубликатов с использованием PDG
-    func runDuplicateCodeAnalysis1() {
-        let source1 = """
-        class FirstViewController: UIViewController {
+    func runDuplicateCodeAnalysis() {
+        let duplicateManager = PDGDuplicateCodeManager(appPath: appPath, similarityThreshold: settings.minSimilarityThreshold)
+        duplicateManager.analyzeDuplicates(output: &outputFile)
 
-            let round = UIView()
-            let square = UIView()
-
-            override func viewDidLoad() {
-                super.viewDidLoad()
-
-                view.backgroundColor = .white
-
-                setupSquare()
-            }
-            
-            private func setupSquare() {
-                square.backgroundColor = .blue
-                square.translatesAutoresizingMaskIntoConstraints = false
-
-                view.addSubview(square)
-                NSLayoutConstraint.activate([
-                    square.widthAnchor.constraint(equalToConstant: 200),
-                    square.heightAnchor.constraint(equalToConstant: 200),
-                    square.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                    square.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-                ])
-            }
+        DispatchQueue.main.async {
+            isAnalyzingDuplicates = false
         }
-        class SecondViewController: UIViewController {
-
-            let round = UIView()
-            let square = UIView()
-
-            override func viewDidLoad() {
-                super.viewDidLoad()
-
-                view.backgroundColor = .blue
-
-                setupSquare()
-                setupRound()
-            }
-
-            private func setupSquare() {
-                square.backgroundColor = .white
-                square.translatesAutoresizingMaskIntoConstraints = false
-
-                view.addSubview(square)
-                NSLayoutConstraint.activate([
-                    square.widthAnchor.constraint(equalToConstant: 200),
-                    square.heightAnchor.constraint(equalToConstant: 200),
-                    square.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                    square.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-                ])
-            }
-
-            private func setupRound() {
-                round.backgroundColor = .red
-                round.layer.cornerRadius = 100
-                round.translatesAutoresizingMaskIntoConstraints = false
-
-                view.addSubview(round)
-                NSLayoutConstraint.activate([
-                    round.widthAnchor.constraint(equalToConstant: 300),
-                    round.heightAnchor.constraint(equalToConstant: 300),
-                    round.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                    round.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-                ])
-            }
-        }
-        """
-
-        let source = """
-        class Test {
-            func setupView1() {
-                let view1 = UIView()
-                view1.backgroundColor = .red
-                addSubview(view1)
-            }
-            
-            func setupView2() {
-                let view2 = UIView()
-                view2.backgroundColor = .blue // не добавляется в граф!! добавить тип узла присвоение
-                view2.doSmth()
-                addSubview(view2)
-            }
-            
-            func doSomethingElse() {
-                let stack = UIStackView()
-                stack.axis = .center
-                stack.doSmth()
-            }
-        }
-        """
-
-        let visitor = ASTVisitor(viewMode: .sourceAccurate)
-        let sourceFile = Parser.parse(source: source)
-        visitor.walk(sourceFile)
-
-        let builder = PDGBuilder(ast: visitor.ast)
-        builder.build()
-
-        let subgraphs = builder.extractNormalizedSubgraphs()
-
-        let clones = findSemanticClones(subgraphs: subgraphs)
-        print("\n=== Correct Semantic Clones ===")
-        for (name1, name2, similarity) in clones {
-            print("\(name1) ~ \(name2): \(String(format: "%.2f", similarity)) similarity")
-        }
-
-        // Дополнительная диагностика
-        print("\n=== Structure Analysis ===")
-        for sg in subgraphs.filter({ $0.nodes.contains { $0.astNode.type == .function } }) {
-            let name = sg.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
-            print("\nFunction: \(name)")
-            print("Operations: \(sg.normalizedOperations())")
-            print("Structure: \(sg.normalizedStructureSignature())")
-        }
-
-        func findSemanticClones(subgraphs: [PDGSubgraph]) -> [(String, String, Double)] {
-            var results = [(String, String, Double)]()
-            let functionSubgraphs = subgraphs.filter { sg in
-                sg.nodes.contains { $0.astNode.type == .function }
-            }
-            
-            for i in 0..<functionSubgraphs.count {
-                for j in (i+1)..<functionSubgraphs.count {
-                    let g1 = functionSubgraphs[i]
-                    let g2 = functionSubgraphs[j]
-                    
-                    let similarity = g1.semanticSimilarity(to: g2)
-                    print(similarity)
-                    if similarity >= 0.3 { // такое маленькое потому что надо исправить Сравнение операций внутри функций
-                        let name1 = g1.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
-                        let name2 = g2.nodes.first { $0.astNode.type == .function }?.astNode.value ?? "?"
-                        results.append((name1, name2, similarity))
-                    }
-                }
-            }
-            
-            return results.sorted { $0.2 > $1.2 }
-        }
-//        let duplicateManager = PDGDuplicateCodeManager(appPath: appPath)
-//        duplicateManager.analyzeDuplicates(outputFile: &outputFile)
     }
 
-    /// Поиск дубликатов с использованием jscpd
-    func runDuplicateCodeAnalysis() {
+    /// с использованием jscpd
+    func runDuplicateCodeAnalysisWithJscpd() {
         guard !appPath.isEmpty else {
-            outputFile = "Error: Project path is empty. Please select a valid directory."
+            outputFile = "Укажите путь к проекту"
             return
         }
 
-        // Сбор всех .swift файлов
         let swiftFiles = collectSwiftFiles(at: appPath)
-        guard !swiftFiles.isEmpty else {
-            outputFile = "Error: No .swift files found in the project."
-            return
-        }
+        guard !swiftFiles.isEmpty else { return }
 
         let jscpdPath = "/opt/homebrew/bin/jscpd"
         guard FileManager.default.isExecutableFile(atPath: jscpdPath) else {
@@ -290,7 +302,6 @@ struct HomeView: View {
             return
         }
 
-        // Нормализация кода и копирование в временную директорию
         for file in swiftFiles {
             do {
                 let code = try String(contentsOfFile: file)
@@ -335,7 +346,6 @@ struct HomeView: View {
             outputFile = "Error running jscpd: \(error.localizedDescription)"
         }
 
-        // Удаление временной директории
         do {
             try FileManager.default.removeItem(atPath: tempDir)
         } catch {
@@ -343,7 +353,6 @@ struct HomeView: View {
         }
     }
 
-    /// Функция нормализации кода
     func normalizeCode(_ code: String) -> String {
         var normalized = code
 
@@ -351,23 +360,11 @@ struct HomeView: View {
         normalized = normalized.replacingOccurrences(of: "//.*", with: "", options: .regularExpression)
         normalized = normalized.replacingOccurrences(of: "/\\*.*?\\*/", with: "", options: .regularExpression)
 
-        // Замена имён функций на func_
         normalized = normalized.replacingOccurrences(of: "\\bfunc\\s+[a-zA-Z_][a-zA-Z0-9_]*", with: "func func_", options: .regularExpression)
 
-        // Замена имён переменных на var_
         normalized = normalized.replacingOccurrences(of: "\\blet\\s+[a-zA-Z_][a-zA-Z0-9_]*", with: "let var_", options: .regularExpression)
         normalized = normalized.replacingOccurrences(of: "\\bvar\\s+[a-zA-Z_][a-zA-Z0-9_]*", with: "var var_", options: .regularExpression)
 
         return normalized
-    }
-}
-
-#Preview {
-    PreviewContainer()
-}
-
-private struct PreviewContainer: View {
-    var body: some View {
-        HomeView()
     }
 }

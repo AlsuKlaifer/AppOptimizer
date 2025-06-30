@@ -14,7 +14,6 @@ final class DeadCodeManager {
     private let appPath: String
     private let retainPublic: Bool
     private let includeAssets: Bool
-    private let includeLibraries: Bool
 
     private let dispatchGroup = DispatchGroup()
     private let queue = DispatchQueue.global()
@@ -22,29 +21,22 @@ final class DeadCodeManager {
 
     // MARK: Lifecycle
 
-    init(appPath: String, retainPublic: Bool, includeAssets: Bool, includeLibraries: Bool) {
+    init(appPath: String, retainPublic: Bool, includeAssets: Bool) {
         self.appPath = appPath
         self.retainPublic = retainPublic
         self.includeAssets = includeAssets
-        self.includeLibraries = includeLibraries
     }
 
     // MARK: Internal methods
 
     func analyze(outputFile: inout String) {
-        runAsync(name: "Dead Code") {
+        runAsync(name: "Unused Code") {
             DeadCodeAnalyzer(appPath: self.appPath, retainPublic: self.retainPublic).analyze()
         }
 
         if includeAssets {
             runAsync(name: "Unused Assets") {
                 AssetUsageAnalyzer(appPath: self.appPath).analyze()
-            }
-        }
-
-        if includeLibraries {
-            runAsync(name: "Unused Libraries") {
-                LibraryAnalyzer(appPath: self.appPath).analyze()
             }
         }
 

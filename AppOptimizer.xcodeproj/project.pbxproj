@@ -7,11 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		152929BA2E100E86001AB7B0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152929B92E100E7F001AB7B0 /* SettingsView.swift */; };
+		152929BC2E101903001AB7B0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152929BB2E101900001AB7B0 /* Settings.swift */; };
+		152929BE2E1174EB001AB7B0 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152929BD2E1174EB001AB7B0 /* MainTabView.swift */; };
+		152929C02E118421001AB7B0 /* RemoveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152929BF2E118408001AB7B0 /* RemoveManager.swift */; };
+		1540B0692E11C32000C9EFC2 /* DeleteResultsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1540B0682E11C31F00C9EFC2 /* DeleteResultsSheet.swift */; };
+		1540B06B2E11CDC600C9EFC2 /* PDGNodeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1540B06A2E11CDB900C9EFC2 /* PDGNodeType.swift */; };
+		1540B06D2E12F84A00C9EFC2 /* VF2Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1540B06C2E12F82E00C9EFC2 /* VF2Graph.swift */; };
 		7A0938082E0B357300B9C37B /* DeadCodeAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0938072E0B357200B9C37B /* DeadCodeAnalyzer.swift */; };
 		7A09380B2E0B35CE00B9C37B /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A09380A2E0B35C800B9C37B /* FileCache.swift */; };
 		7A09380D2E0B35E400B9C37B /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A09380C2E0B35E300B9C37B /* Shell.swift */; };
 		7A09380F2E0B362C00B9C37B /* AssetUsageAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A09380E2E0B362C00B9C37B /* AssetUsageAnalyzer.swift */; };
-		7A0938112E0B364500B9C37B /* LibraryAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0938102E0B364400B9C37B /* LibraryAnalyzer.swift */; };
 		7A0938132E0B3FEA00B9C37B /* ProjectFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0938122E0B3FE900B9C37B /* ProjectFile.swift */; };
 		7A3D31112D5647980031C192 /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31102D5647980031C192 /* SwiftBasicFormat */; };
 		7A3D31132D5647980031C192 /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 7A3D31122D5647980031C192 /* SwiftCompilerPlugin */; };
@@ -38,11 +44,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		152929B92E100E7F001AB7B0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		152929BB2E101900001AB7B0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		152929BD2E1174EB001AB7B0 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		152929BF2E118408001AB7B0 /* RemoveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveManager.swift; sourceTree = "<group>"; };
+		1540B0682E11C31F00C9EFC2 /* DeleteResultsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteResultsSheet.swift; sourceTree = "<group>"; };
+		1540B06A2E11CDB900C9EFC2 /* PDGNodeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDGNodeType.swift; sourceTree = "<group>"; };
+		1540B06C2E12F82E00C9EFC2 /* VF2Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VF2Graph.swift; sourceTree = "<group>"; };
 		7A0938072E0B357200B9C37B /* DeadCodeAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadCodeAnalyzer.swift; sourceTree = "<group>"; };
 		7A09380A2E0B35C800B9C37B /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
 		7A09380C2E0B35E300B9C37B /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		7A09380E2E0B362C00B9C37B /* AssetUsageAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetUsageAnalyzer.swift; sourceTree = "<group>"; };
-		7A0938102E0B364400B9C37B /* LibraryAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAnalyzer.swift; sourceTree = "<group>"; };
 		7A0938122E0B3FE900B9C37B /* ProjectFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFile.swift; sourceTree = "<group>"; };
 		7A3D311B2D564B0B0031C192 /* ASTDuplicateCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASTDuplicateCodeManager.swift; sourceTree = "<group>"; };
 		7A5281A22D0F24A0005CAC69 /* AppOptimizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppOptimizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +113,8 @@
 		7A3D311A2D564AFC0031C192 /* Duplicate */ = {
 			isa = PBXGroup;
 			children = (
+				7AA887B22DA44D590059A4A2 /* PDGDuplicateCodeManager.swift */,
+				7A3D311B2D564B0B0031C192 /* ASTDuplicateCodeManager.swift */,
 				7AA887B02DA44D270059A4A2 /* PDGBuilder.swift */,
 			);
 			path = Duplicate;
@@ -127,7 +141,6 @@
 			isa = PBXGroup;
 			children = (
 				7A0938092E0B35C200B9C37B /* Helpers */,
-				7AA887B62DA44F0E0059A4A2 /* Managers */,
 				7AA8878A2D8D614A0059A4A2 /* Models */,
 				7A5281B52D0F2554005CAC69 /* View */,
 				7A5281B42D0F253D005CAC69 /* Modules */,
@@ -160,6 +173,9 @@
 		7A5281B52D0F2554005CAC69 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1540B0682E11C31F00C9EFC2 /* DeleteResultsSheet.swift */,
+				152929BD2E1174EB001AB7B0 /* MainTabView.swift */,
+				152929B92E100E7F001AB7B0 /* SettingsView.swift */,
 				7A5281B62D0F2562005CAC69 /* HomeView.swift */,
 			);
 			path = View;
@@ -168,6 +184,7 @@
 		7AA8878A2D8D614A0059A4A2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				152929BB2E101900001AB7B0 /* Settings.swift */,
 				7AA887AD2DA44C610059A4A2 /* PDG */,
 				7AA887AC2DA44C1A0059A4A2 /* AST */,
 			);
@@ -177,7 +194,7 @@
 		7AA887912D8D62180059A4A2 /* Dead Code */ = {
 			isa = PBXGroup;
 			children = (
-				7A0938102E0B364400B9C37B /* LibraryAnalyzer.swift */,
+				152929BF2E118408001AB7B0 /* RemoveManager.swift */,
 				7A09380E2E0B362C00B9C37B /* AssetUsageAnalyzer.swift */,
 				7A0938072E0B357200B9C37B /* DeadCodeAnalyzer.swift */,
 				7A8A41BB2D2EEC4600FD7D5A /* DeadCodeManager.swift */,
@@ -198,21 +215,14 @@
 		7AA887AD2DA44C610059A4A2 /* PDG */ = {
 			isa = PBXGroup;
 			children = (
+				1540B06C2E12F82E00C9EFC2 /* VF2Graph.swift */,
+				1540B06A2E11CDB900C9EFC2 /* PDGNodeType.swift */,
 				7AA887B92DA455A70059A4A2 /* PDGSubgraph.swift */,
 				7AA887B72DA451B40059A4A2 /* PDGEdgeType.swift */,
 				7AA887B42DA44E2F0059A4A2 /* PDGGraph.swift */,
 				7AA887AE2DA44C6D0059A4A2 /* PDGNode.swift */,
 			);
 			path = PDG;
-			sourceTree = "<group>";
-		};
-		7AA887B62DA44F0E0059A4A2 /* Managers */ = {
-			isa = PBXGroup;
-			children = (
-				7AA887B22DA44D590059A4A2 /* PDGDuplicateCodeManager.swift */,
-				7A3D311B2D564B0B0031C192 /* ASTDuplicateCodeManager.swift */,
-			);
-			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -289,10 +299,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				152929BA2E100E86001AB7B0 /* SettingsView.swift in Sources */,
+				1540B0692E11C32000C9EFC2 /* DeleteResultsSheet.swift in Sources */,
 				7A3D311C2D564B0C0031C192 /* ASTDuplicateCodeManager.swift in Sources */,
+				1540B06D2E12F84A00C9EFC2 /* VF2Graph.swift in Sources */,
 				7AA8878E2D8D61880059A4A2 /* AST.swift in Sources */,
 				7A09380D2E0B35E400B9C37B /* Shell.swift in Sources */,
 				7A8A41BC2D2EEC4600FD7D5A /* DeadCodeManager.swift in Sources */,
+				152929BE2E1174EB001AB7B0 /* MainTabView.swift in Sources */,
+				1540B06B2E11CDC600C9EFC2 /* PDGNodeType.swift in Sources */,
+				152929C02E118421001AB7B0 /* RemoveManager.swift in Sources */,
 				7A5281A82D0F24A0005CAC69 /* ContentView.swift in Sources */,
 				7AA887B82DA451B50059A4A2 /* PDGEdgeType.swift in Sources */,
 				7AA887B52DA44E300059A4A2 /* PDGGraph.swift in Sources */,
@@ -305,9 +321,9 @@
 				7AA887B12DA44D280059A4A2 /* PDGBuilder.swift in Sources */,
 				7AA887B32DA44D590059A4A2 /* PDGDuplicateCodeManager.swift in Sources */,
 				7AA887902D8D61A10059A4A2 /* ASTNode.swift in Sources */,
-				7A0938112E0B364500B9C37B /* LibraryAnalyzer.swift in Sources */,
 				7AA8878C2D8D615B0059A4A2 /* ASTVisitor.swift in Sources */,
 				7A0938132E0B3FEA00B9C37B /* ProjectFile.swift in Sources */,
+				152929BC2E101903001AB7B0 /* Settings.swift in Sources */,
 				7A09380F2E0B362C00B9C37B /* AssetUsageAnalyzer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

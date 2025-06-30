@@ -2,7 +2,7 @@
 //  ProjectFile.swift
 //  AppOptimizer
 //
-//  Created by Alsu Faizova on 24.06.2025.
+//  Created by Alsu Faizova on 04.06.2025.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ struct ProjectFile {
     let path: String
     let isWorkspace: Bool
 
-    var allFiles: [String] {
+    var workspaceFiles: [String] {
         if isWorkspace {
             return [path]
         } else {
@@ -24,14 +24,6 @@ struct ProjectFile {
             .deletingPathExtension()
             .lastPathComponent
     }
-
-//    var defaultTarget: String {
-//        fetchXcodeList(label: "Targets").first ?? "App"
-//    }
-//
-//    var defaultScheme: String {
-//        fetchXcodeList(label: "Schemes").first ?? "App"
-//    }
 
     var defaultTarget: String { projectName }
     var defaultScheme: String { projectName }

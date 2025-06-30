@@ -73,7 +73,7 @@ class ASTDuplicateCodeManager {
                 var variableMapping: [String: String] = [:]
                 let similarity = asts[i].similarity(to: asts[j], variableMapping: &variableMapping)
                 print(similarity)
-                if similarity >= 0.5 { // Допускаем небольшие различия
+                if similarity >= 0.5 {
                     duplicates[asts[i], default: []].append(asts[j])
                 }
             }

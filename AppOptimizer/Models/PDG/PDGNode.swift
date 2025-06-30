@@ -7,13 +7,15 @@
 
 import Foundation
 
-struct PDGNode: Hashable {
+struct PDGNode: Hashable, Codable {
     let id: UUID
     let astNode: ASTNode
+    let type: PDGNodeType?
     
-    init(astNode: ASTNode) {
+    init(astNode: ASTNode, type: PDGNodeType? = nil) {
         self.id = UUID()
         self.astNode = astNode
+        self.type = type
     }
 
     func signature() -> String {
@@ -23,7 +25,7 @@ struct PDGNode: Hashable {
 
 extension PDGNode {
     func subgraphSignature(depth: Int = 2) -> String {
-        // Возвращает сигнатуру этого узла и его детей до depth слоёв
+        // возвращаем сигнатуру этого узла и его детей до depth слоёв
         var result = [signature()]
         var frontier: [(PDGNode, Int)] = [(self, 0)]
 
@@ -32,7 +34,7 @@ extension PDGNode {
 
             guard level < depth else { continue }
 
-            // Найдём соседей по управляющим и данным зависимостям
+            // ищем соседей по управляющим и данным зависимостям
             let connectedNodes = getConnectedNodes(from: current)
             for neighbor in connectedNodes {
                 result.append(neighbor.signature())

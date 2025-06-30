@@ -5,9 +5,17 @@
 //  Created by Alsu Faizova on 07.04.2025.
 //
 
-struct PDGSubgraph {
+import Foundation
+
+struct PDGEdgeCodable: Codable {
+    let from: PDGNode
+    let to: PDGNode
+    let type: PDGEdgeType
+}
+
+struct PDGSubgraph: Codable {
     let nodes: [PDGNode]
-    let edges: [(from: PDGNode, to: PDGNode, type: PDGEdgeType)]
+    let edges: [PDGEdgeCodable]
 
     func structureSignature() -> String {
         let nodeDescriptors = nodes.map { $0.semanticSignature() }.sorted()
@@ -23,13 +31,11 @@ struct PDGSubgraph {
 
 extension PDGSubgraph {
     func isIsomorphic(to other: PDGSubgraph) -> Bool {
-        // Проверка количества узлов и рёбер
         guard nodes.count == other.nodes.count,
               edges.count == other.edges.count else {
             return false
         }
 
-        // Проверка семантической эквивалентности узлов
         let ourNodes = nodes.sorted { $0.semanticSignature() < $1.semanticSignature() }
         let theirNodes = other.nodes.sorted { $0.semanticSignature() < $1.semanticSignature() }
 
@@ -39,7 +45,6 @@ extension PDGSubgraph {
             }
         }
 
-        // Исправленная сортировка рёбер
         let ourEdges = edges.sorted { edge1, edge2 in
             let type1 = edge1.type == .control ? 0 : 1
             let type2 = edge2.type == .control ? 0 : 1
@@ -88,7 +93,6 @@ extension PDGSubgraph {
     }
 }
 
-// 4. Метод сравнения подграфов
 extension PDGSubgraph {
     func normalizedSignature() -> String {
         let nodeTypes = nodes.map { $0.astNode.type.rawValue }.sorted().joined(separator: "|")
@@ -121,31 +125,19 @@ extension PDGSubgraph {
         }
         print("}")
     }
-
-    func similarityBetween(_ sg1: PDGSubgraph, _ sg2: PDGSubgraph) -> Double {
-        // Реализация более сложного сравнения
-        // с возвратом значения от 0.0 до 1.0
-        return 0.0
-    }
 }
 
 extension PDGSubgraph {
     func similarity(to other: PDGSubgraph) -> Double {
-        // Нормализация узлов
         let selfNodes = self.normalizedNodes()
         let otherNodes = other.normalizedNodes()
-        
-        // Нормализация рёбер
+
         let selfEdges = self.normalizedEdges()
         let otherEdges = other.normalizedEdges()
-        
-        // Вычисляем схожесть узлов
+
         let nodeSimilarity = jaccardSimilarity(selfNodes, otherNodes)
-        
-        // Вычисляем схожесть рёбер
         let edgeSimilarity = jaccardSimilarity(selfEdges, otherEdges)
-        
-        // Общая схожесть (можно настроить веса)
+
         return (nodeSimilarity + edgeSimilarity) / 2
     }
     
@@ -169,14 +161,49 @@ extension PDGSubgraph {
     }
 
     private func jaccardSimilarity<T: Hashable>(_ a: Set<T>, _ b: Set<T>) -> Double {
-        // поправить для операции внутри функций (досттаь соурс код и найти меру жаккарда)
-        // мб использовать расстояние левенштейна или https://habr.com/ru/companies/skillfactory/articles/566414/
         let intersection = a.intersection(b).count
         let union = a.union(b).count
         return union > 0 ? Double(intersection) / Double(union) : 0
     }
 }
 
+extension PDGSubgraph {
+    func semanticSimilarity(to other: PDGSubgraph) -> Double {
+        let opsA = Set(self.normalizedOperations())
+        let opsB = Set(other.normalizedOperations())
+        let opSim = jaccardSimilarity(opsA, opsB)
+
+        let structSetA = self.normalizedStructureSignature()
+        let structSetB = other.normalizedStructureSignature()
+        let structStrA = structSetA.sorted().joined(separator: "\n")
+        let structStrB = structSetB.sorted().joined(separator: "\n")
+        let structSim = normalizedLevenshteinSimilarity(structStrA, structStrB)
+
+        return 0.4 * opSim + 0.6 * structSim
+    }
+
+    private func levenshteinDistance(_ s: String, _ t: String) -> Int {
+        let a = Array(s), b = Array(t)
+        let n = a.count, m = b.count
+        if n == 0 { return m }; if m == 0 { return n }
+        var prev = [Int](0...m), curr = [Int](repeating: 0, count: m+1)
+        for i in 1...n {
+            curr[0] = i
+            for j in 1...m {
+                let cost = a[i-1] == b[j-1] ? 0 : 1
+                curr[j] = min(prev[j] + 1, curr[j-1] + 1, prev[j-1] + cost)
+            }
+            swap(&prev, &curr)
+        }
+        return prev[m]
+    }
+
+    private func normalizedLevenshteinSimilarity(_ a: String, _ b: String) -> Double {
+        let dist = levenshteinDistance(a, b)
+        let maxLen = max(a.count, b.count)
+        return maxLen > 0 ? (1.0 - Double(dist) / Double(maxLen)) : 1.0
+    }
+}
 extension PDGSubgraph {
     private func normalizedNodeSignature(_ node: PDGNode) -> String {
         switch node.astNode.type {
@@ -197,33 +224,10 @@ extension PDGSubgraph {
 }
 
 extension PDGSubgraph {
-    func semanticSimilarity(to other: PDGSubgraph) -> Double {
-        // 1. Фильтруем только узлы функций
-        let selfFuncNodes = self.nodes.filter { $0.astNode.type == .function }
-        let otherFuncNodes = other.nodes.filter { $0.astNode.type == .function }
-        
-        guard !selfFuncNodes.isEmpty && !otherFuncNodes.isEmpty else {
-            return 0.0
-        }
-        
-        // 2. Сравниваем только внутреннюю структуру функций
-        let selfStructure = self.normalizedStructureSignature()
-        let otherStructure = other.normalizedStructureSignature()
-        let structureScore = jaccardSimilarity(selfStructure, otherStructure)
-        
-        // 3. Сравниваем операции внутри функций
-        let selfOps = self.normalizedOperations()
-        let otherOps = other.normalizedOperations()
-        let opsScore = jaccardSimilarity(selfOps, otherOps) // ИСПРАВИТь
-        
-        // 4. Комбинируем оценки с приоритетом операций
-        return (opsScore * 0.5 + structureScore * 0.5)
-    }
-    
+
     func normalizedStructureSignature() -> Set<String> {
         var signatures = Set<String>()
-        
-        // Анализируем только узлы внутри функции (игнорируем внешние)
+
         let internalNodes = nodes.filter { node in
             guard let parent = node.astNode.parent else { return false }
             return parent.type == .function
@@ -234,7 +238,7 @@ extension PDGSubgraph {
         }
         
         for edge in edges {
-            // Учитываем только ребра между внутренними узлами
+            // учитываем только ребра между внутренними узлами
             if internalNodes.contains(edge.from) && internalNodes.contains(edge.to) {
                 signatures.insert("EDGE:\(edge.from.astNode.type)-\(edge.type)-\(edge.to.astNode.type)")
             }
@@ -246,15 +250,12 @@ extension PDGSubgraph {
 
 extension PDGSubgraph {
     func isSemanticClone(of other: PDGSubgraph) -> Bool {
-        // 1. Нормализация операций
         let selfOps = self.normalizedOperations()
         let otherOps = other.normalizedOperations()
-        
-        // 2. Сравнение структуры вызовов
+
         let selfCalls = self.functionCallsPattern()
         let otherCalls = other.functionCallsPattern()
-        
-        // 3. Сравнение структуры переменных
+
         let selfVars = self.variablesPattern()
         let otherVars = other.variablesPattern()
 
@@ -279,12 +280,44 @@ extension PDGSubgraph {
     private func functionCallsPattern() -> [String] {
         return nodes
             .filter { $0.astNode.type == .functionCall }
-            .map { _ in "CALL" } // Нормализуем все вызовы
+            .map { _ in "CALL" }
     }
     
     private func variablesPattern() -> [String] {
         return nodes
             .filter { $0.astNode.type == .variable }
             .map { $0.astNode.variableType ?? "VAR" }
+    }
+}
+
+extension PDGSubgraph: VF2Graph {
+    var vertices: [UUID] {
+        nodes.map { $0.astNode.id }
+    }
+
+    var vertexLabel: [UUID: String] {
+        Dictionary(uniqueKeysWithValues:
+            nodes.map { ($0.astNode.id, $0.astNode.type.rawValue) }
+        )
+    }
+
+    var edgesOut: [UUID: [(to: UUID, label: String)]] {
+        var dict = [UUID: [(to: UUID, label: String)]]()
+        for edge in edges {
+            let from = edge.from.astNode.id
+            let to   = edge.to.astNode.id
+            dict[from, default: []].append((to: to, label: edge.type.rawValue))
+        }
+        return dict
+    }
+
+    var edgesIn: [UUID: [(from: UUID, label: String)]] {
+        var dict = [UUID: [(from: UUID, label: String)]]()
+        for edge in edges {
+            let from = edge.from.astNode.id
+            let to   = edge.to.astNode.id
+            dict[to, default: []].append((from: from, label: edge.type.rawValue))
+        }
+        return dict
     }
 }

@@ -23,20 +23,6 @@ class ASTVisitor: SyntaxVisitor {
     private var currentFunction: ASTNode?
     private var functionCount = 0
     private var nodeStack = [ASTNode]()
-        
-//    override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
-//        let classNode = ASTNode(
-//            type: .class1,
-//            value: node.name.text,
-//            sourceCode: node.description.trimmingCharacters(in: .whitespacesAndNewlines)
-//        )
-//        pushNode(classNode)
-//        return .visitChildren
-//    }
-//    
-//    override func visitPost(_ node: ClassDeclSyntax) {
-//        popNode()
-//    }
 
     // MARK: SyntaxVisitor Overrides
 

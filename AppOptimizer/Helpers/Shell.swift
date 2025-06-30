@@ -2,7 +2,7 @@
 //  Shell.swift
 //  AppOptimizer
 //
-//  Created by Alsu Faizova on 24.06.2025.
+//  Created by Alsu Faizova on 04.06.2025.
 //
 
 import Foundation
